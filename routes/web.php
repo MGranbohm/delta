@@ -15,6 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::post('/message', 'messageController@store');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
