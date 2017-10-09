@@ -42102,9 +42102,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_particles_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_particles_js__);
 
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
-        return {};
+        return {
+            message: '',
+            mood: ''
+        };
     },
     created: function created() {
         particlesJS.load('particles-js', 'assets/particles.json', function () {
@@ -42113,7 +42117,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
 
-    methods: {}
+    methods: {
+        read: function read() {
+            if (this.message === "fuck you") {
+                this.mood = "anger";
+                this.message = "No, Fuck you!";
+            }
+            var msg = new SpeechSynthesisUtterance(this.message);
+            window.speechSynthesis.speak(msg);
+        }
+    }
 });
 
 /***/ }),
