@@ -1,0 +1,24 @@
+.background {
+	background-color: grey;
+	height: 100vh;
+	min-height:100%;
+
+	.message-body {
+		padding: 0 !important;
+	}
+
+	.chat-box {
+	    height: 200px;
+	    background: #f5f7fa;
+	    overflow-y: scroll;
+	    border-radius: 3px 3px 0 0;
+	    border: 1px solid #d3d6db;
+	    border-bottom: none;
+	    padding: 1rem;
+	    overflow: hidden;
+	}
+
+	&.anger {
+		background-color: red!important;
+	}
+}
