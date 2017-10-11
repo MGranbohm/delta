@@ -14,7 +14,7 @@ class WatsonResponseSeeder extends Seeder
     {
         $message = Message::create([]);
         $message->watsonResponse()->create([
-            'body' => "Hello man",
+            'body' => "Thank you SWEETIE",
         ]);
     }
 }
