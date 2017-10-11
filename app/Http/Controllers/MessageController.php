@@ -22,7 +22,7 @@ class MessageController extends Controller
         $userMessage = $request->message;
         $watsonResponse = $this->getWatsonResponse($userMessage);
         $responseModel = new WatsonResponse();
-        $responseModel->response = $watsonResponse;
+        $responseModel->body = $watsonResponse;
         $messageModel=Message::create([
             'message'=> $userMessage
         ]);
