@@ -8,6 +8,7 @@ class WatsonController extends Controller
 {
     public function getMessage()
     {
-
+        $data = 'wazzup';
+        return view('watson', compact('data'));
     }
 }
