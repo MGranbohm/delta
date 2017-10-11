@@ -18,4 +18,5 @@ class Message extends Model
     {
     	return $this->hasOne(Mood::class);
     }
+
 }
