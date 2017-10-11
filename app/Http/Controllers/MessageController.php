@@ -6,6 +6,11 @@ use App\Message\Message;
 use App\Watson\WatsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * Class MessageController
+ * stores input message, watson response.
+ * @package App\Http\Controllers
+ */
 class MessageController extends Controller
 {
     public function testInput()
@@ -14,6 +19,12 @@ class MessageController extends Controller
         $responses = WatsonResponse::all();
         return view( 'testInput', compact('messages'), compact('responses'));
     }
+
+    /**
+     * Validates the response, gets a watson response for the input message and stores both the message and the watson response in the Database.
+     * @param Request $request The http request containg the input message.
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -32,10 +43,16 @@ class MessageController extends Controller
         return $this->testInput();
 
     }
+
+    /**
+     * Gets a watson response depending on the input message.
+     * @param $message inputmessage
+     * @return string   watson response
+     */
     public function getWatsonResponse($message)
     {
         if ($message=='You suck'){
-            $message='Fuck';
+            $message='Fuck off';
         }
         elseif ($message=='You rule'){
             $message='Sweet';
