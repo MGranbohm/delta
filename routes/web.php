@@ -18,3 +18,5 @@ Route::post('/message', 'messageController@store');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/mood', 'MoodController@check');
