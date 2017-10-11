@@ -43,7 +43,7 @@ use App\Watson\WatsonResponse;
  		{
  			$this->moodLevel += 3;
  		}
- 		if(strpos($watsonAnswer, 'sweet') !== false)
+ 		if(strpos($watsonAnswer, 'Sweet') !== false)
  		{
  			$this->moodLevel += -1;
  		}

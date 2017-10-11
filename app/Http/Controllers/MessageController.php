@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Message\Message;
 use App\Watson\WatsonResponse;
 use Illuminate\Http\Request;
+use App\Message\MoodHandler;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Class MessageController
@@ -17,7 +19,14 @@ class MessageController extends Controller
     {
         $messages = Message::all();
         $responses = WatsonResponse::all();
-        return view( 'testInput', compact('messages'), compact('responses'));
+
+        $test = new MoodHandler($responses);
+        $mood = $test->getGeneralMood();
+
+
+
+
+        return view( 'testInput', compact('messages', 'responses', 'mood'));
     }
 
     /**
@@ -52,7 +61,7 @@ class MessageController extends Controller
     public function getWatsonResponse($message)
     {
         if ($message=='You suck'){
-            $message='Fuck off';
+            $message='Fuck';
         }
         elseif ($message=='You rule'){
             $message='Sweet';
