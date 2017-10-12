@@ -65,7 +65,17 @@ use App\Watson\WatsonResponse;
 
  	//Checks if the String contains a specific word, then assisning the mood.
  	
-
+	public function checkLevels(){
+ 		if($this->moodLevel < 0)
+ 		{
+ 			$this->moodLevel = 0;
+ 		}
+ 		if($this->moodLevel > 100)
+ 		{
+ 			$this->moodLevel = 100;
+ 		}
+ 	}
+ 	
  	public function getGeneralMood(){
  		return $this->moodLevel;
  	}
