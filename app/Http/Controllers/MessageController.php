@@ -60,12 +60,15 @@ class MessageController extends Controller
      */
     public function getWatsonResponse($message)
     {
-        if ($message == 'You suck'){
+        if ($message == 'You suck')
+        {
             $message = 'Fuck';
         }
-        elseif ($message == 'You rule'){
+        elseif ($message == 'You rule')
+        {
             $message = 'Sweet';
-        }else{
+        }else
+        {
             $message = 'meh';
         }
         return $message;
