@@ -2,6 +2,6 @@
 
 @section('content')
 
-    <h1>{{ $data }}</h1>
+    <h1>{{ $outputput }}</h1>
 
     @endsection
