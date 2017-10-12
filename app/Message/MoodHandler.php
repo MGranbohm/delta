@@ -64,42 +64,7 @@ use App\Watson\WatsonResponse;
 	}
 
  	//Checks if the String contains a specific word, then assisning the mood.
-/* 	public function assignMood($watsonAnswer)
- 	{		
- 		$bad_words = array("fuck","cunt");
- 		foreach($bad_words as $bad_word)
-		{
-    		if (strpos($watsonAnswer, $bad_word) !== false)
-    		{
-        		echo ' one of the bad words was found';
-        		$this->moodLevel += 3;
-        		break;
-    		}
-		}
-    	
-    	$good_words = array("sweetie");
-   		foreach($good_words as $good_word)
-		{
-    		if (strpos($watsonAnswer, $good_word) !== false)
-    		{
-        		echo ' one of the good good was found';
-        		$this->moodLevel -= 1;
-        		break;
-    		}
-  		}
-	}*/
-
- 	//Check if the dude reached maxiumum happiness or anger.
- 	public function checkLevels(){
- 		if($this->moodLevel < 0)
- 		{
- 			$this->moodLevel = 0;
- 		}
- 		if($this->moodLevel > 100)
- 		{
- 			$this->moodLevel = 100;
- 		}
- 	}
+ 	
 
  	public function getGeneralMood(){
  		return $this->moodLevel;
