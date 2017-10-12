@@ -11,7 +11,7 @@ class MoodController extends Controller
    
 	public function check()
 	{
-		 $watsonResponse = WatsonResponse::all();
+        $watsonResponse = WatsonResponse::all();
 		$watsonContains = WatsonResponse::where('body','=','Fuck off')->first();
 		
 		$answer= '';

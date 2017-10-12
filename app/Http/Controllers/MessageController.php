@@ -43,7 +43,7 @@ class MessageController extends Controller
         $watsonResponse = $this->getWatsonResponse($userMessage);
         $responseModel = new WatsonResponse();
         $responseModel->body = $watsonResponse;
-        $messageModel=Message::create([
+        $messageModel = Message::create([
             'message'=> $userMessage
         ]);
         $messageModel->watsonResponse()->save($responseModel);
@@ -60,13 +60,13 @@ class MessageController extends Controller
      */
     public function getWatsonResponse($message)
     {
-        if ($message=='You suck'){
-            $message='Fuck';
+        if ($message == 'You suck'){
+            $message = 'Fuck';
         }
-        elseif ($message=='You rule'){
-            $message='Sweet';
+        elseif ($message == 'You rule'){
+            $message = 'Sweet';
         }else{
-            $message='meh';
+            $message = 'meh';
         }
         return $message;
 
