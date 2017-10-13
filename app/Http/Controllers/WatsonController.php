@@ -2,78 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use GuzzleHttp\Client;
-use function GuzzleHttp\Psr7\copy_to_string;
-use Illuminate\Auth\Middleware\AuthenticateWithBasicAuth;
-use Illuminate\Http\Request;
-use Ixudra\Curl\Facades\Curl;
-use function MongoDB\BSON\toJSON;
-
+/**
+ * Class that handles message communication with
+ * IBM Watson Conversation API using cURL.
+ *
+ * Class WatsonController
+ * @package App\Http\Controllers
+ */
 class WatsonController extends Controller
 {
-    public function getMessage($inputMessage, $inputContext)
+    /**
+     * Gets input message from user and returns a view with a message response
+     * returned from IBM Watson Conversation.
+     * @param $input
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getMessage($input)
     {
-//        $data = $this->fetchResponse();
-//        $data = $this->fetchCounters();
-        $data = $inputContext;
-        $inputMessage = "hello";
-//        $data = $this->convo($inputMessage, $context);
-        return view('watson', compact('data'));
-    }
-
-    public function getMessageStart($input)
-    {
-//        $data = $this->fetchResponse();
-//        $data = $this->fetchCounters();
         $inputMessage = $input;
-        $data = $this->convo($inputMessage);
+        $data = $this->conversationContext($inputMessage);
         $context = $this->getContext($data);
         $output = $this->conversation($inputMessage, $context);
-        $outputput = $this->getAnswer($output);
-        return view('watson', compact('outputput'));
+        $response = $this->getAnswer($output);
+        return view('watson', compact('response'));
     }
 
-    public function convo($data)
+    /**
+     * Returns a response JSON from IBM Watson Conversation with
+     * the input data as message.
+     * @param $message input
+     * @return response as JSON object
+     */
+    public function conversationContext($message)
     {
 
         $ch = curl_init();
-//        $var = '{"input": {"text": "'.$data.'"}, "context": {"conversation_id": "1b7b67c0-90ed-45dc-8508-9488bc483d5b", "system": {"dialog_stack":[{"dialog_node":"root"}], "dialog_turn_counter": 1, "dialog_request_counter": 1}}}';
 
         curl_setopt($ch, CURLOPT_URL, "https://gateway-fra.watsonplatform.net/conversation/api/v1/workspaces/5f1d789d-abff-4597-880f-faa758f553b7/message?version=2017-05-26");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, '{"input": {"text": "'.$data.'"}, "Context": {"conversation_id": "6db63f0d-c5ca-4d65-a309-69249f036d12", "system": {"dialog_stack":[{"dialog_node":"root"}], "dialog_turn_counter": 1, "dialog_request_counter": 1}}}');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, '{"input": {"text": "'.$message.'"}, "Context": {"conversation_id": "6db63f0d-c5ca-4d65-a309-69249f036d12", "system": {"dialog_stack":[{"dialog_node":"root"}], "dialog_turn_counter": 1, "dialog_request_counter": 1}}}');
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_USERPWD, "7eff2092-b37a-4b23-a754-48a6c83e4266" . ":" . "jK8hBg5gtQFa");
-//        dd($ch);
-        $headers = array();
-        $headers[] = "Content-Type: application/json";
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        $result = curl_exec($ch);
-//        $something = json_decode($result);
-//        $context = $something->context;
-//        dd($context);
-        if (curl_errno($ch)) {
-            echo 'Error:' . curl_error($ch);
-        }
-        curl_close ($ch);
-//        dd($result);
-        return $result;
-    }
-
-    public function conversation($data, $context)
-    {
-
-        $ch = curl_init();
-//        dd($context);
-//        $var = '{"input": {"text": "'.$data.'"}, "context": {"conversation_id": "1b7b67c0-90ed-45dc-8508-9488bc483d5b", "system": {"dialog_stack":[{"dialog_node":"root"}], "dialog_turn_counter": 1, "dialog_request_counter": 1}}}';
-
-        curl_setopt($ch, CURLOPT_URL, "https://gateway-fra.watsonplatform.net/conversation/api/v1/workspaces/5f1d789d-abff-4597-880f-faa758f553b7/message?version=2017-05-26");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, '{"input": {"text": "'.$data.'"}, "Context": {"conversation_id": '.$context.', "system": {"dialog_stack":[{"dialog_node":"root"}], "dialog_turn_counter": 2, "dialog_request_counter": 2}}}');
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_USERPWD, "7eff2092-b37a-4b23-a754-48a6c83e4266" . ":" . "jK8hBg5gtQFa");
-
         $headers = array();
         $headers[] = "Content-Type: application/json";
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -87,67 +56,70 @@ class WatsonController extends Controller
         return $result;
     }
 
-    public function getContext($data)
+    /**
+     * Returns a response JSON from IBM Watson Conversation with
+     * the input data and conversation_id from previous communication.
+     * @param $message input
+     * @param $conversation_id from previous conversation
+     * @return response as JSON object
+     */
+    public function conversation($message, $conversation_id)
     {
-        if($data === null){
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, "https://gateway-fra.watsonplatform.net/conversation/api/v1/workspaces/5f1d789d-abff-4597-880f-faa758f553b7/message?version=2017-05-26");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, '{"input": {"text": "'.$message.'"}, "Context": {"conversation_id": '.$conversation_id.', "system": {"dialog_stack":[{"dialog_node":"root"}], "dialog_turn_counter": 2, "dialog_request_counter": 2}}}');
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_USERPWD, "7eff2092-b37a-4b23-a754-48a6c83e4266" . ":" . "jK8hBg5gtQFa");
+
+        $headers = array();
+        $headers[] = "Content-Type: application/json";
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+        curl_close ($ch);
+        return $result;
+    }
+
+    /**
+     * Returns the $conversation_id part of an IBM Watson Conversation JSON
+     * object as a String.
+     * @param $messageJSON
+     * @return string conversation_id
+     */
+    public function getContext($messageJSON)
+    {
+        if($messageJSON === null){
             return "context";
         }
-        $something = json_decode($data);
+        $something = json_decode($messageJSON);
         $context = $something->context->conversation_id;
-//        dd($context);
         $contextReturn = json_encode($context);
         return $contextReturn;
     }
 
-    public function getAnswer($data)
+    /**
+     * Returns the response part of an IBM Watson Conversation JSON
+     * object as a String.
+     * @param $messageJSON
+     * @return string Response
+     */
+    public function getAnswer($messageJSON)
     {
-        if($data === null){
+        if($messageJSON === null){
             return "Dude you did something wrong!";
         }
-        $something = json_decode($data);
+        $something = json_decode($messageJSON);
         $context = $something->output->text;
-//        dd($context);
-        $contextReturn = json_encode($context);
-        return $contextReturn;
-    }
+        $text = json_encode($context);
+        $toReturn = substr($text, 2, -2);
 
-    public function fetchResponse()
-    {
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, "https://gateway-fra.watsonplatform.net/conversation/api/v1/workspaces/5f1d789d-abff-4597-880f-faa758f553b7/message?version=2017-05-26");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, '{"input": {"text": "hello"}, "context": {"conversation_id": "1b7b67c0-90ed-45dc-8508-9488bc483d5b", "system": {"dialog_stack":[{"dialog_node":"root"}], "dialog_turn_counter": 1, "dialog_request_counter": 1}}}');
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_USERPWD, "7eff2092-b37a-4b23-a754-48a6c83e4266" . ":" . "jK8hBg5gtQFa");
-
-        $headers = array();
-        $headers[] = "Content-Type: application/json";
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        $result = curl_exec($ch);
-        if (curl_errno($ch)) {
-            echo 'Error:' . curl_error($ch);
-        }
-        curl_close ($ch);
-        return $result;
-    }
-
-    public function fetchCounters()
-    {
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, "https://gateway-fra.watsonplatform.net/conversation/api/v1/workspaces/5f1d789d-abff-4597-880f-faa758f553b7/counterexamples?version=2017-05-26");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-
-        curl_setopt($ch, CURLOPT_USERPWD, "7eff2092-b37a-4b23-a754-48a6c83e4266" . ":" . "jK8hBg5gtQFa");
-
-        $result = curl_exec($ch);
-        if (curl_errno($ch)) {
-            echo 'Error:' . curl_error($ch);
-        }
-        curl_close ($ch);
-        return $result;
+        return $toReturn;
     }
 }
