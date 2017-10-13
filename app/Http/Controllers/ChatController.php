@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Message\Message;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use DB;
 
 class ChatController extends Controller
 {
@@ -10,4 +13,5 @@ class ChatController extends Controller
     {
     	return view('chat');
     }
+
 }
