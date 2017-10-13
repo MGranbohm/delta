@@ -19,6 +19,10 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+
 Route::get('/testInput', 'MessageController@testInput');
 
 Route::get('/mood', 'MoodController@check');
+
+Route::get('/watson/{input}', 'WatsonController@getMessage');
+
