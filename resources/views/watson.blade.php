@@ -2,6 +2,6 @@
 
 @section('content')
 
-    <h1>{{ $outputput }}</h1>
+    <h1>{{ $response }}</h1>
 
     @endsection
