@@ -18,6 +18,7 @@ class CreateContextsTable extends Migration
             $table->timestamp('timestamps');
             $table->text('context');
             $table->text('intent');
+            $table->text('entity');
         });
     }
 

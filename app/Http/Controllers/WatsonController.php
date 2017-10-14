@@ -24,46 +24,61 @@ class WatsonController extends Controller
     {
         $inputMessage = $input;
 
-        $contextPrevious = $this->watsonDBgetContext();
-//        $intentPrevious = $this->watsonDBgetIntent();
+//        $output = $this->conversationContext($inputMessage);
+//        $context = $this->getContextObject($output);
 //        $intent = $this->getIntentObject($output);
-//        dd($intentPrevious);
+//        $entity = $this->getEntityObject($output);
+//        $this->watsonDBinsert($context, $intent, $entity);
+//        $response = $this->getAnswer($output);
 
-//        $output = $this->conversation($inputMessage, $contextPrevious, $intentPrevious);
 //        dd($output);
-        $output = $this->conversationContext($inputMessage);
-//        dd($output);
+//        dd('{"intents":['.$intent.'],"entities":'.$entity.$context);
+//        return view('watson', compact('response'));
+
+//      -----------------------------------------------------
+
+        $contextPrevious = $this->watsonDBgetContext();
+        $intentPrevious = $this->watsonDBgetIntent();
+        $entityPrevious = $this->watsonDBgetEntity();
+
+        $output = $this->conversation($inputMessage, $intentPrevious, $entityPrevious, $contextPrevious);
+
         $context = $this->getContextObject($output);
         $intent = $this->getIntentObject($output);
-//        dd($intent);
-
-        $this->watsonDBinsert($context, $intent);
+        $entity = $this->getEntityObject($output);
+        $this->watsonDBinsert($context, $intent, $entity);
 
         $response = $this->getAnswer($output);
         return view('watson', compact('response'));
     }
 
-    public function watsonDBinsert($contextInput, $intentInput)
+    public function watsonDBinsert($contextInput, $intentInput, $entityInput)
     {
         Context::create([
             'context' => $contextInput,
-            'intent' => $intentInput
+            'intent' => $intentInput,
+            'entity' => $entityInput
         ]);
     }
 
     public function watsonDBgetContext()
     {
-        $contextDB = Context::orderBy('timestamps')->first();
-//        $contextDB = Context::
-        $res = (string)$contextDB->id;
-        dd($res);
+        $contextDB = Context::orderBy('timestamps', 'DESC')->first();
+        $res = (string)$contextDB->context;
         return $res;
     }
 
     public function watsonDBgetIntent()
     {
-        $contextDB = Context::orderBy('created_at')->first();
-        $res = (string)$contextDB;
+        $contextDB = Context::orderBy('timestamps', 'DESC')->first();
+        $res = (string)$contextDB->intent;
+        return $res;
+    }
+
+    public function watsonDBgetEntity()
+    {
+        $contextDB = Context::orderBy('timestamps', 'DESC')->first();
+        $res = (string)$contextDB->entity;
         return $res;
     }
 
@@ -103,16 +118,22 @@ class WatsonController extends Controller
      * @param $conversation_id from previous conversation
      * @return response as JSON object
      */
-    public function conversation($message, $context, $intent)
+    public function conversation($message, $intent, $entity, $context)
     {
+
+//        dd('{"intents":['.$intent.'],"entities":'.$entity.',"input":{"text": "'.$message.'"}, "Context":'.$context.'}');
 
         $ch = curl_init();
 
-
         curl_setopt($ch, CURLOPT_URL, "https://gateway-fra.watsonplatform.net/conversation/api/v1/workspaces/5f1d789d-abff-4597-880f-faa758f553b7/message?version=2017-05-26");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-//        curl_setopt($ch, CURLOPT_POSTFIELDS, '{"input": {"text": "'.$message.'"}, "Context":'.$context.'}');
-        curl_setopt($ch, CURLOPT_POSTFIELDS, '{"input": {"text": "'.$message.'"}, "Context":'.$context.'}'.$intent.'');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, '{"input": {"text": "'.$message.'"}}'); // med inget
+//        curl_setopt($ch, CURLOPT_POSTFIELDS, '{"input": {"text": "'.$message.'"}, "Context":'.$context.'}'); // med context objekt
+//        curl_setopt($ch, CURLOPT_POSTFIELDS, '{"input": {"text": "'.$message.'"}}'); // utan context objekt
+//        curl_setopt($ch, CURLOPT_POSTFIELDS, '{"intents":['.$intent.'],"entities":'.$entity.',"input": {"text": "'.$message.'"}, "Context":'.$context.'}'); // med allt
+
+
+
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_USERPWD, "7eff2092-b37a-4b23-a754-48a6c83e4266" . ":" . "jK8hBg5gtQFa");
 
@@ -123,7 +144,7 @@ class WatsonController extends Controller
 
         $result = curl_exec($ch);
 
-//        dd($result);
+        dd($result);
 
         if (curl_errno($ch)) {
             echo 'Error:' . curl_error($ch);
@@ -138,16 +159,16 @@ class WatsonController extends Controller
      * @param $messageJSON
      * @return string conversation_id
      */
-    public function getContext($messageJSON)
-    {
-        if($messageJSON === null){
-            return "context";
-        }
-        $something = json_decode($messageJSON);
-        $context = $something->context->conversation_id;
-        $contextReturn = json_encode($context);
-        return $contextReturn;
-    }
+//    public function getContext($messageJSON)
+//    {
+//        if($messageJSON === null){
+//            return "context";
+//        }
+//        $something = json_decode($messageJSON);
+//        $context = $something->context->conversation_id;
+//        $contextReturn = json_encode($context);
+//        return $contextReturn;
+//    }
 
     /**
      * Returns the response part of an IBM Watson Conversation JSON
@@ -178,6 +199,18 @@ class WatsonController extends Controller
         $intentObject = json_encode($intent);
         $toReturn = substr($intentObject, 1, -1);
         return $toReturn; // returnerar intent rätt
+    }
+    public function getEntityObject($messageJSON)
+    {
+        if($messageJSON === null){
+            return "intent";
+        }
+        $something = json_decode($messageJSON);
+        $entity = $something->entities;
+        $entityObject = json_encode($entity);
+//        $toReturn = substr($intentObject, 1, -1);
+//        return $toReturn; // returnerar intent rätt
+        return $entityObject;
     }
 
     public function getContextObject($messageJSON)
