@@ -13,10 +13,19 @@
 
 Route::get('/', 'ChatController@index');
 
-Route::post('/message', 'messageController@store');
+Route::post('/message', 'MessageController@store');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+
+Route::get('/testInput', 'MessageController@testInput');
+
+Route::get('/mood', 'MoodController@check');
+
+
 Route::get('/watson/{input}', 'WatsonController@getMessage');
+
+Route::get('/sound/{WatsonResponse}', 'SoundController@watsonSound');
+
