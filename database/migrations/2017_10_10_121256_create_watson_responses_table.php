@@ -16,7 +16,9 @@ class CreateWatsonResponsesTable extends Migration
         Schema::create('watson_responses', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('message_id');
+            $table->string('body');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
