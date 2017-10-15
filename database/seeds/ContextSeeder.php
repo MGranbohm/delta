@@ -1,6 +1,7 @@
 <?php
 
 use App\Context;
+use App\Watson\WatsonAPI;
 use Illuminate\Database\Seeder;
 
 
@@ -13,7 +14,7 @@ class ContextSeeder extends Seeder
      */
     public function run()
     {
-        $api = new \App\Watson\WatsonAPI();
-        $api->createDummyData("hello");
+//        $api = new WatsonAPI(); // Förstör hela förbannade appen, får åt ¤""#¤"! piss laravel :)
+//        $api->createDummyData("hello");
     }
 }

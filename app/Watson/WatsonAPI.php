@@ -18,6 +18,8 @@ use App\Context;
  */
 class WatsonAPI
 {
+
+
     /**
      * Gets input message from user, stores values in db and
      * returns a message response from IBM Watson Conversation.
@@ -26,17 +28,22 @@ class WatsonAPI
      */
     public function getMessage($input)
     {
-        $inputMessage = $input;
-        $contextPrevious = $this->watsonDBgetContext();
-        $output = $this->conversation($inputMessage, $contextPrevious);
+        if($input == '-x'){
+            return $this->createDummyData('hello');
+        }
+        else {
+            $inputMessage = $input;
+            $contextPrevious = $this->watsonDBgetContext();
+            $output = $this->conversation($inputMessage, $contextPrevious);
 
-        $context = $this->getContextObject($output);
-        $intent = $this->getIntentObject($output);
-        $entity = $this->getEntityObject($output);
-        $this->watsonDBinsert($context, $intent, $entity);
+            $context = $this->getContextObject($output);
+            $intent = $this->getIntentObject($output);
+            $entity = $this->getEntityObject($output);
+            $this->watsonDBinsert($context, $intent, $entity);
 
-        $response = $this->getAnswer($output);
-        return $response;
+            $response = $this->getAnswer($output);
+            return $response;
+        }
     }
 
     public function createDummyData($input)
