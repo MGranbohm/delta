@@ -11,6 +11,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call(ContextSeeder::class);
         $this->call(WatsonResponseSeeder::class);
         $this->call(UsersTableSeeder::class);
     }
