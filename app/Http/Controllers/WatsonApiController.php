@@ -13,7 +13,7 @@ use App\Context;
  * Class WatsonController
  * @package App\Http\Controllers
  */
-class WatsonController extends Controller
+class WatsonApiController extends Controller
 {
     private $apiConnection;
 
