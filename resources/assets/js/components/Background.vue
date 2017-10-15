@@ -21,16 +21,10 @@
         },
 
         created() {
-            particlesJS.load('particles-js', 'assets/particles.json', function() {
-                console.log('callback - particles.js config loaded');
-            });
+            particlesJS.load('particles-js', 'assets/particles.json');
         },
 
         methods: {
-            wasSentByUser(message) {
-                return true;
-            },
-
             getAudio(message) {
                 axios.get(this.posturl + "/sound/" + message)
                     .then(response => {

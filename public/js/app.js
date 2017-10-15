@@ -42123,16 +42123,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         });
     },
     created: function created() {
-        particlesJS.load('particles-js', 'assets/particles.json', function () {
-            console.log('callback - particles.js config loaded');
-        });
+        particlesJS.load('particles-js', 'assets/particles.json');
     },
 
 
     methods: {
-        wasSentByUser: function wasSentByUser(message) {
-            return true;
-        },
         getAudio: function getAudio(message) {
             var _this = this;
 
