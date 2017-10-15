@@ -16,12 +16,13 @@ use App\Watson\WatsonResponse;
  	*from the database and then passes
  	*the data. 
  	*/
-     public function __construct($watsonResponse)
+     public function __construct($watsonResponses)
  	{
- 		foreach ($watsonResponse as $object)
+ 		foreach ($watsonResponses as $response)
  		{
- 			$response = $object->body;
- 			var_dump($response);
+// 			$response = $object->body;
+
+// 			var_dump($response);
  			$this->watsonLowerCase($response);
  			$this->checkLevels();
  		}
@@ -30,11 +31,14 @@ use App\Watson\WatsonResponse;
      /**
       * @param $watsonResponse
       */
-     public function watsonLowerCase($watsonResponse)
+     public function watsonLowerCase($response)
     {
- 		$watsonResponse = strtolower($watsonResponse);
- 		echo $watsonResponse;
- 		$this->assignMood($watsonResponse);
+        $watsonResponseBody = $response->body;
+ 		$watsonResponseBody = strtolower($watsonResponseBody);
+ 		$response->body=$watsonResponseBody;
+ 		$response->save();
+ 		echo $response;
+ 		$this->assignMood($response);
  	}
 
      public function getRandomMood()
@@ -73,10 +77,15 @@ use App\Watson\WatsonResponse;
      /**
       * @param $watsonAnswer
       */
-     public function assignMood($watsonAnswer)
+     public function assignMood($response)
     {
-		$result = $this->checkWatsonResponse($watsonAnswer);
-		$this->moodLevel += $result;
+		$result = $this->checkWatsonResponse($response->body);
+
+
+		$message=$response->message;
+		$mood = new Mood();
+		$mood->mood=$result;
+		$message->mood()->save($mood);
 		echo $result;
 	}
 
@@ -97,7 +106,13 @@ use App\Watson\WatsonResponse;
 
 
  	public function getGeneralMood(){
- 		return $this->moodLevel;
+         $generalMood = 50;
+         $moods = Mood::all();
+         foreach($moods as  $mood)
+         {
+            $generalMood=$generalMood+$mood->mood;
+         }
+ 		return $generalMood;
  	}
 
 //skicka in en string. få tillbaka ett värde.

@@ -16,7 +16,9 @@ class CreateMoodsTable extends Migration
         Schema::create('moods', function (Blueprint $table) {
             $table->increments('id');
 	        $table->integer('message_id');
+	        $table->integer('mood');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
