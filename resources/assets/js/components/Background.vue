@@ -1,5 +1,6 @@
 <script>
 import particles from "particles.js";
+import axios from "axios";
 
 export default {
 
@@ -22,10 +23,18 @@ export default {
     			this.mood = "anger";
     			this.message = "No, Fuck you!"
     		}
-    		var msg = new SpeechSynthesisUtterance(this.message);
+    		let msg = new SpeechSynthesisUtterance(this.message);
 			window.speechSynthesis.speak(msg);
     	},
 
+        post() {
+    	    axios.post(this.posturl, this.getData())
+                .then(function (response) {
+                    
+                }).catch(function (errors) {
+                
+                })
+        }
     }
 };
 </script>
