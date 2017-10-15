@@ -4,13 +4,16 @@
         message: <input type="text" name="message"><br>
         <input type="submit" value="Submit" required>
 
-        @foreach($messages as $message)
-            <li>{{$message}}</li>
+        {{--@foreach($messages as $message)--}}
+            {{--<li>{{$message}}</li>--}}
+        {{--@endforeach--}}
+        {{--@foreach($responses as $response)--}}
+            {{--<li>{{$response}}</li>--}}
+        {{--@endforeach--}}
+        @foreach($c as $post)
+            <li>{{$post[0]}}</li>
+            <li>{{$post[1]}}</li>
         @endforeach
-        @foreach($responses as $response)
-            <li>{{$response}}</li>
-        @endforeach
-
         {{$mood}}
 
     </form>
