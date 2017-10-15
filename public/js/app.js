@@ -42128,6 +42128,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
     methods: {
+        mildyAngry: function mildyAngry() {
+            this.mood = "anger";
+        },
+        breakYou: function breakYou() {
+            var number = 0;
+
+            for (var i = 0; i > -1; i++) {
+                number = number + 100;
+            }
+        },
+        storyTime: function storyTime() {
+            var story = "I fell down the old well. Fortunately, I wasn’t hurt. At the bottom, there was a skeleton, a horrid thing in the tatters of a summer dress. I was terrified. I climbed out and ran back to the house but I couldn’t find my family, only a man and a woman I didn’t know. I approached them; the man ignored me, but the woman screamed, and then I realized there was something important I had forgotten.\n" + "\n" + "Then I was back in the dark well again, with that horrible skeleton.\n" + "\n" + "What have I forgotten? What was it?";
+            var msg = new SpeechSynthesisUtterance(story);
+            window.speechSynthesis.speak(msg);
+        },
         getAudio: function getAudio(message) {
             var _this = this;
 
@@ -42163,8 +42178,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this4 = this;
 
             __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post(this.posturl + "/message", this.getData()).then(function (response) {
-                //                        let msg = new SpeechSynthesisUtterance(response.data.response.body);
-                //                        window.speechSynthesis.speak(msg);
                 _this4.getMessages();
                 _this4.getAudio(response.data.response.id);
                 _this4.clear();
