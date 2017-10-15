@@ -25,6 +25,4 @@ Route::get('/testInput', 'MessageController@testInput');
 
 Route::get('/mood', 'MoodController@check');
 
-Route::get('/watson/{input}', 'WatsonController@getMessage');
-
 Route::get('/sound/{WatsonResponse}', 'SoundController@watsonSound');
