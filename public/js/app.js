@@ -42146,10 +42146,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get(this.posturl + "/messages/all").then(function (response) {
                 _this2.messages = response.data;
+                _this2.scrollToBottom();
             }).catch(function (error) {
                 console.log(error);
             });
-            this.scrollToBottom();
         },
         scrollToBottom: function scrollToBottom() {
             var _this3 = this;
@@ -42167,9 +42167,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 //                        window.speechSynthesis.speak(msg);
                 _this4.getMessages();
                 _this4.getAudio(response.data.response.id);
+                _this4.clear();
             }).catch(function (error) {
                 console.log(error);
             });
+        },
+        clear: function clear() {
+            this.message = "";
         },
         getData: function getData() {
             return {

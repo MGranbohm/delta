@@ -40,10 +40,10 @@
                 axios.get(this.posturl +"/messages/all")
                     .then(response => {
                         this.messages = response.data;
+                        this.scrollToBottom();
                     }).catch(error => {
                         console.log(error);
                     });
-                this.scrollToBottom();
             },
 
             scrollToBottom() {
@@ -58,9 +58,14 @@
 //                        window.speechSynthesis.speak(msg);
                         this.getMessages();
                         this.getAudio(response.data.response.id);
+                        this.clear();
                     }).catch(error => {
                         console.log(error);
                     });
+            },
+
+            clear(){
+                this.message = "";
             },
 
             getData() {
