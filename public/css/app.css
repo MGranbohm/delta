@@ -19217,3 +19217,36 @@ label.panel-block:hover {
   background-color: red !important;
 }
 
+.chat .chat-box {
+  height: 300px;
+  background: #dbdbdb;
+  overflow-y: scroll;
+  border-radius: 3px 3px 0 0;
+  border: 1px solid #b5b5b5;
+  border-bottom: none;
+  padding: 1rem;
+}
+
+.chat .chat-box .message-container {
+  clear: both;
+}
+
+.chat .chat-box .message-container:last-child .message {
+  margin-bottom: 0;
+}
+
+.chat .chat-box .message {
+  max-width: 85%;
+  background: #c2c2c2;
+  border-radius: 3px;
+  color: #0a0a0a;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.chat .chat-box .message.from-user {
+  background: #00d1b2;
+  color: white;
+  float: right;
+}
+

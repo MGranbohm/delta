@@ -42107,11 +42107,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['posturl'],
+
     data: function data() {
         return {
             message: '',
-            mood: ''
+            mood: '',
+            messages: ''
         };
+    },
+    mounted: function mounted() {
+        this.$nextTick(function () {
+            this.getMessages();
+        });
     },
     created: function created() {
         particlesJS.load('particles-js', 'assets/particles.json', function () {
@@ -42121,16 +42129,41 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
     methods: {
-        read: function read() {
-            if (this.message === "fuck you") {
-                this.mood = "anger";
-                this.message = "No, Fuck you!";
-            }
-            var msg = new SpeechSynthesisUtterance(this.message);
-            window.speechSynthesis.speak(msg);
+        wasSentByUser: function wasSentByUser(message) {
+            return true;
+        },
+        getMessages: function getMessages() {
+            var _this = this;
+
+            __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get(this.posturl + "/messages/all").then(function (response) {
+                console.log(response);
+                _this.messages = response.data;
+            }).catch(function (error) {});
+            this.scrollToBottom();
+        },
+        scrollToBottom: function scrollToBottom() {
+            var _this2 = this;
+
+            this.chatBox = document.getElementById('chat-box');
+            setTimeout(function () {
+                _this2.chatBox.scrollTop = _this2.chatBox.scrollHeight;
+            }, 0);
         },
         post: function post() {
-            __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post(this.posturl, this.getData()).then(function (response) {}).catch(function (errors) {});
+            var _this3 = this;
+
+            __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post(this.posturl + "/message", this.getData()).then(function (response) {
+                var msg = new SpeechSynthesisUtterance(response.data.response.body);
+                console.log(response);
+                console.log(response.data);
+                window.speechSynthesis.speak(msg);
+                _this3.getMessages();
+            }).catch(function (error) {});
+        },
+        getData: function getData() {
+            return {
+                message: this.message
+            };
         }
     }
 });

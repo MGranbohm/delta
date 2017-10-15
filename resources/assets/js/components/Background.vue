@@ -9,7 +9,14 @@
             return {
                 message: '',
                 mood: '',
+                messages: '',
             }
+        },
+
+        mounted() {
+            this.$nextTick(function () {
+                this.getMessages();
+            })
         },
 
         created() {
@@ -19,23 +26,36 @@
         },
 
         methods: {
-            read(){
-                if(this.message === "fuck you") {
-                    this.mood = "anger";
-                    this.message = "No, Fuck you!"
-                }
-                let msg = new SpeechSynthesisUtterance(this.message);
-                window.speechSynthesis.speak(msg);
+            wasSentByUser(message) {
+                return true;
+            },
+
+            getMessages() {
+                axios.get(this.posturl +"/messages/all")
+                    .then(response => {
+                        console.log(response);
+                        this.messages = response.data;
+                    }).catch(error => {
+                });
+                this.scrollToBottom();
+            },
+
+            scrollToBottom() {
+                this.chatBox = document.getElementById('chat-box');
+                setTimeout(() => { this.chatBox.scrollTop = this.chatBox.scrollHeight; }, 0);
             },
 
             post() {
-                axios.post(this.posturl +"/message" + this.updateId, this.getFormData())
+                axios.post(this.posturl +"/message", this.getData())
                     .then(response => {
+                        let msg = new SpeechSynthesisUtterance(response.data.response.body);
                         console.log(response);
+                        console.log(response.data);
+                        window.speechSynthesis.speak(msg);
+                        this.getMessages();
                     }).catch(error => {
-                    this.isLoading = false;
-                    this.errors = error.response.data.errors;
-                });
+
+                    });
             },
 
             getData() {
