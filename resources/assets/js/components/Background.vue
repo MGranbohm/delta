@@ -10,6 +10,7 @@
                 message: '',
                 mood: '',
                 messages: '',
+                audio: '',
             }
         },
 
@@ -30,13 +31,24 @@
                 return true;
             },
 
+            getAudio(message) {
+                axios.get(this.posturl + "/sound/" + message)
+                    .then(response => {
+                        this.audio = response.data;
+                        let music = this.$refs.audio;
+                        setTimeout(() => { music.play(); }, 10);
+                    }).catch(error => {
+                        console.log(error);
+                    });
+            },
+
             getMessages() {
                 axios.get(this.posturl +"/messages/all")
                     .then(response => {
-                        console.log(response);
                         this.messages = response.data;
                     }).catch(error => {
-                });
+                        console.log(error);
+                    });
                 this.scrollToBottom();
             },
 
@@ -48,13 +60,12 @@
             post() {
                 axios.post(this.posturl +"/message", this.getData())
                     .then(response => {
-                        let msg = new SpeechSynthesisUtterance(response.data.response.body);
-                        console.log(response);
-                        console.log(response.data);
-                        window.speechSynthesis.speak(msg);
+//                        let msg = new SpeechSynthesisUtterance(response.data.response.body);
+//                        window.speechSynthesis.speak(msg);
                         this.getMessages();
+                        this.getAudio(response.data.response.id);
                     }).catch(error => {
-
+                        console.log(error);
                     });
             },
 

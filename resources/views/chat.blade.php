@@ -32,6 +32,7 @@
 								  <button class="button is-primary" v-on:click="post">Skicka</button>
 							  </p>
 						  </div>
+                          <audio autoplay="true" ref="audio" v-bind:src="audio">
 					  </div>
 				  </div>
 			  </div>

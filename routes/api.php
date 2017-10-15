@@ -20,6 +20,7 @@ Route::get('response/{message}','MessageController@getResponse');
 Route::post('message', 'MessageController@postMessage');
 Route::delete('message/{message}', 'MessageController@deleteMessage');
 Route::put('message/update/{message}', 'MessageController@update');
+Route::get('/sound/{WatsonResponse}', 'SoundController@watsonSound');
 
 Route::post('register', 'Auth\RegisterController@register');
 Route::post('login', 'Auth\LoginController@login');
