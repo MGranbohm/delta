@@ -26,3 +26,5 @@ Route::get('/mood', 'MoodController@check');
 
 Route::get('/watson/{input}', 'WatsonController@getMessage');
 
+
+

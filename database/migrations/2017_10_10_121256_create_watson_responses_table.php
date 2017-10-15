@@ -18,6 +18,7 @@ class CreateWatsonResponsesTable extends Migration
             $table->integer('message_id');
             $table->string('body');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
