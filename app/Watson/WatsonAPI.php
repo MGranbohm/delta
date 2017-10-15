@@ -93,7 +93,7 @@ class WatsonAPI
      */
     public function watsonDBgetContext()
     {
-        $contextDB = Context::orderBy('timestamps', 'DESC')->first();
+        $contextDB = Context::orderBy('created_at', 'dsc')->first();
         $res = (string)$contextDB->context;
         return $res;
     }
@@ -104,7 +104,7 @@ class WatsonAPI
      */
     public function watsonDBgetIntent()
     {
-        $contextDB = Context::orderBy('timestamps', 'DESC')->first();
+        $contextDB = Context::orderBy('created_at', 'dsc')->first();
         $res = (string)$contextDB->intent;
         return $res;
     }

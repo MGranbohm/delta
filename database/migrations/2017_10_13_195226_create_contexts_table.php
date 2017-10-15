@@ -15,7 +15,7 @@ class CreateContextsTable extends Migration
     {
         Schema::create('contexts', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamp('timestamps');
+	        $table->timestamps();
             $table->text('context');
             $table->text('intent');
             $table->text('entity');
