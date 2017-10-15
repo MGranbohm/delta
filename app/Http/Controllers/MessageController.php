@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Message\Message;
 use App\Message\Mood;
+use App\Watson\WatsonAPI;
 use App\Watson\WatsonResponse;
 use Illuminate\Http\Request;
 use App\Message\MoodHandler;
@@ -130,19 +131,7 @@ class MessageController extends Controller
      */
     public function getWatsonResponse($message)
     {
-        if ($message == 'You suck')
-        {
-            $message = 'Fuck';
-        }
-        elseif ($message == 'You rule')
-        {
-            $message = 'Sweet';
-        }else
-        {
-            $message = 'meh';
-        }
-        return $message;
-
-
+        $api = new WatsonAPI();
+		return $api->getMessage($message);
     }
 }
