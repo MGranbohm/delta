@@ -1,18 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Mood</title>
+    <title></title>
+    <meta charset='utf-8' />
+    
 </head>
 <body>
-	<h1>
-		
-		{{--}}	
-				@foreach ($watsonResponse as $object){{--}}
-			
- 			   {{ $watsonContains->body }}
-		{{--}}	@endforeach{{--}}
- 			
-	</h1>
-
+  <audio src="{{ $voice }}" autoplay="autoplay"></audio>
 </body>
 </html>

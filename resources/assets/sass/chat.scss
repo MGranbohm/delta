@@ -22,3 +22,37 @@
 		background-color: red!important;
 	}
 }
+.chat {
+	.chat-box {
+		height: 300px;
+		background: $grey-lighter;
+		overflow-y: scroll;
+		border-radius: $radius $radius 0 0;
+		border: 1px solid $grey-light;
+		border-bottom: none;
+		padding: 1rem;
+
+		.message-container {
+			clear: both;
+
+			&:last-child .message {
+				margin-bottom: 0;
+			}
+		}
+
+		.message {
+			max-width: 85%;
+			background: lighten($grey-light, 5%);
+			border-radius: $radius;
+			color: $black;
+			padding: 1rem;
+			margin-bottom: 1rem;
+
+			&.from-user {
+				background: $primary;
+				color: $white;
+				float: right;
+			}
+		}
+	}
+}

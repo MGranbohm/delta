@@ -28,4 +28,12 @@ class Message extends Model
     	return $this->hasOne(Mood::class);
     }
 
+    public function toArray()
+    {
+    	return [
+    		'id' => $this->id,
+    	    'message' => $this->message,
+		    'response' => $this->watsonResponse->body,
+	    ];
+    }
 }
