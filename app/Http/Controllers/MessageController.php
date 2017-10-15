@@ -29,7 +29,6 @@ class MessageController extends Controller
         foreach( $messages as $message)
         {
             $response = $message->WatsonResponse;
-//            var_dump($response);
             $c->push([$message->message, $response->body]);
         }
 
@@ -46,37 +45,41 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-
         $request->validate([
             'message'=>'required'
         ]);
+
         $userMessage = $request->message;
-        $watsonResponse = $this->getWatsonResponse($userMessage);
-        $responseModel = new WatsonResponse();
-        $responseModel->body = $watsonResponse;
-        $messageModel = Message::create([
-            'message'=> $userMessage
+
+        $message = Message::create([
+            'message' => $userMessage
         ]);
-        $messageModel->watsonResponse()->save($responseModel);
 
+	    $watsonResponse = $this->getWatsonResponse($userMessage);
 
+	    $message->watsonResponse()->create([
+		    'body' => $watsonResponse,
+	    ]);
 
+        return $message;
 
     }
+
     public function allMessages()
     {
-        return Message::all();
+        return Message::orderBy('created_at', 'asc')->get();
     }
+
     public function allResponses()
     {
-        return WatsonResponse::all();
+        return WatsonResponse::orderBy('created_at', 'asc')->get();
     }
+
     public function postMessage(Request $request)
     {
-        $this->store($request);
-        $message= Message::where('message','=', $request->message)->first();
-        $response =$message->watsonResponse;
-        $mood= $message->mood;
+        $message = $this->store($request);
+        $response = $message->watsonResponse;
+        $mood = $message->mood;
 
         return response(compact('response','mood'), 201);
     }
@@ -102,7 +105,6 @@ class MessageController extends Controller
 
     public function deleteMessage(Message $message)
     {
-
         $response= $message->watsonResponse;
         $mood = $message->mood;
         $message->delete();
