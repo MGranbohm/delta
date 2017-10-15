@@ -24,7 +24,6 @@ class WatsonController extends Controller
     public function getResponse($input)
     {
         $response = $this->apiConnection->getMessage($input);
-
         return view('watson', compact('response'));
     }
 }
