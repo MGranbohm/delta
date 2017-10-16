@@ -23,13 +23,19 @@ class MessageController extends Controller
         $messages = Message::all();
         $responses = WatsonResponse::all();
 
-        $test = new MoodHandler($responses);
+        $test = new MoodHandler();
         $mood = $test->getGeneralMood();
         $c = collect();
         foreach( $messages as $message)
         {
-            $response = $message->WatsonResponse;
-            $c->push([$message->message, $response->body]);
+            try {
+                $response = $message->WatsonResponse;
+                $c->push([$message->message, $response->body]);
+            }catch (\Exception $e) {
+                echo $e;
+
+            }
+
         }
 
 
@@ -57,22 +63,55 @@ class MessageController extends Controller
 
 	    $watsonResponse = $this->getWatsonResponse($userMessage);
 
+
 	    $message->watsonResponse()->create([
 		    'body' => $watsonResponse,
 	    ]);
+	    $watsonResponse=$message->watsonResponse;
+        $this->setMood($watsonResponse);
 
         return $message;
 
     }
 
+//    public function allMessages()
+//    {
+//        $responses = WatsonResponse::orderBy('created_at', 'asc')->get();
+//        $messages = Message::orderBy('created_at', 'asc')->get();
+//        return response(compact('messages', 'responses'), 200);
+//
+//
+//    }
+
+
     public function allMessages()
     {
         return Message::orderBy('created_at', 'asc')->get();
     }
-
     public function allResponses()
     {
         return WatsonResponse::orderBy('created_at', 'asc')->get();
+    }
+    public function getMessage(Message $message)
+    {
+        $response= $message->watsonResponse;
+        $mood = $message->mood;
+        $responses = WatsonResponse::all();
+        $moodHandler = new MoodHandler();
+        $generalMood = $moodHandler->getGeneralMood();
+
+        return response([$message, $response, $mood,$generalMood], 200);
+    }
+    public function getResponse(WatsonResponse $response)
+    {
+        $message = $response->message;
+
+        $mood = $message->mood;
+
+
+        $moodHandler = new MoodHandler();
+        $generalMood = $moodHandler->getGeneralMood();
+        return response([$message, $response, $mood, $generalMood], 200);
     }
 
     public function postMessage(Request $request)
@@ -81,7 +120,7 @@ class MessageController extends Controller
         $response = $message->watsonResponse;
         $mood = $message->mood;
 
-        return response(compact('response','mood'), 201);
+        return response([$message,$response,$mood], 201);
     }
 
     public function update(Request $request,Message $message)
@@ -95,7 +134,7 @@ class MessageController extends Controller
         $message->message=$request->message;
         $response->body=$this->getWatsonResponse($message->message);
         $responses = WatsonResponse::all();
-        $test = new MoodHandler($responses);
+        $test = new MoodHandler();
         $mood->mood=$test->checkWatsonResponse($response->body);
         $message->save();
         $response->save();
@@ -113,17 +152,19 @@ class MessageController extends Controller
         return response(null, 204);
     }
 
-    public function getResponse(Message $message)
-    {
-        $response= $message->watsonResponse;
-        return response($response, 200);
-    }
     public function getGeneralMood()
     {
         $responses = WatsonResponse::all();
-        $test = new MoodHandler($responses);
+        $test = new MoodHandler();
         $mood = $test->getGeneralMood();
         return response($mood, 200);
+    }
+
+    public function setMood($watsonResponse){
+
+        $test = new MoodHandler();
+        $test->watsonLowerCase($watsonResponse);
+
     }
 
     /**
@@ -131,6 +172,7 @@ class MessageController extends Controller
      * @param $message inputmessage
      * @return string   watson response
      */
+
     public function getWatsonResponse($message)
     {
         $api = new WatsonAPI();
