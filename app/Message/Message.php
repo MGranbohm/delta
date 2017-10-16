@@ -33,7 +33,7 @@ class Message extends Model
     	return [
     		'id' => $this->id,
     	    'message' => $this->message,
-		    'response' => $this->watsonResponse->body,
+		    'response' => $this->watsonResponse()->count() ? $this->watsonResponse->body: "",
 	    ];
     }
 }
