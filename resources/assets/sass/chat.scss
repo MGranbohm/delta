@@ -20,6 +20,14 @@
 
 	&.anger {
 		background-color: red!important;
+
+		.modal {
+			width: 0px;
+			-webkit-transition: width 10s; /* Safari */
+			transition: width 10s;
+			overflow: hidden;
+		}
+
 	}
 }
 .chat {
