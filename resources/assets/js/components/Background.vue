@@ -75,12 +75,24 @@
                 setTimeout(() => { this.chatBox.scrollTop = this.chatBox.scrollHeight; }, 0);
             },
 
+            skynetChecker(message) {
+                if(message.includes("Activating Skynet")) {
+                    this.mildyAngry();
+                }
+                setTimeout(() => {
+                    if(message.includes("Activating Skynet")) {
+                        console.log("killing");
+                        this.breakYou();
+                    } }, 15000);
+            },
+
             post() {
                 axios.post(this.posturl +"/message", this.getData())
                     .then(response => {
                         this.getMessages();
                         this.getAudio(response.data.response.id);
                         this.clear();
+                        this.skynetChecker(response.data.response.body);
                     }).catch(error => {
                     console.log(error);
                 });

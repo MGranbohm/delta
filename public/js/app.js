@@ -42174,13 +42174,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.chatBox.scrollTop = _this3.chatBox.scrollHeight;
             }, 0);
         },
-        post: function post() {
+        skynetChecker: function skynetChecker(message) {
             var _this4 = this;
 
+            if (message.includes("Activating Skynet")) {
+                this.mildyAngry();
+            }
+            setTimeout(function () {
+                if (message.includes("Activating Skynet")) {
+                    console.log("killing");
+                    _this4.breakYou();
+                }
+            }, 15000);
+        },
+        post: function post() {
+            var _this5 = this;
+
             __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post(this.posturl + "/message", this.getData()).then(function (response) {
-                _this4.getMessages();
-                _this4.getAudio(response.data.response.id);
-                _this4.clear();
+                _this5.getMessages();
+                _this5.getAudio(response.data.response.id);
+                _this5.clear();
+                _this5.skynetChecker(response.data.response.body);
             }).catch(function (error) {
                 console.log(error);
             });
