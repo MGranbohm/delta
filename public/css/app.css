@@ -19217,6 +19217,14 @@ label.panel-block:hover {
   background-color: red !important;
 }
 
+.background.anger .modal {
+  width: 0px;
+  -webkit-transition: width 10s;
+  /* Safari */
+  transition: width 10s;
+  overflow: hidden;
+}
+
 .chat .chat-box {
   height: 300px;
   background: #dbdbdb;
