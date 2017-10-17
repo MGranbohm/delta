@@ -13,8 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-//Route::group(['middleware' => ['auth:api']], function()
-//{
+
     Route::get('messages/all','MessageController@allMessages');
     Route::get('messages/{message}', 'MessageController@getMessage');
     Route::get('responses/all','MessageController@allResponses');
@@ -27,6 +26,6 @@ use Illuminate\Http\Request;
     Route::post('register', 'Auth\RegisterController@register');
     Route::post('login', 'Auth\LoginController@login');
     Route::post('logout', 'Auth\LoginController@logout');
-//});
+
 
 
