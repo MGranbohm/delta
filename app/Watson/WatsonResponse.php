@@ -22,4 +22,6 @@ class WatsonResponse extends Model
     {
     	return $this->belongsTo(Message::class);
     }
+
+
 }

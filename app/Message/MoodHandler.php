@@ -16,17 +16,17 @@ use App\Watson\WatsonResponse;
  	*from the database and then passes
  	*the data. 
  	*/
-     public function __construct($watsonResponses)
- 	{
- 		foreach ($watsonResponses as $response)
- 		{
-// 			$response = $object->body;
-
-// 			var_dump($response);
- 			$this->watsonLowerCase($response);
- 			$this->checkLevels();
- 		}
- 	}
+//     public function __construct($watsonResponses)
+// 	{
+// 		foreach ($watsonResponses as $response)
+// 		{
+//// 			$response = $object->body;
+//
+//// 			var_dump($response);
+// 			$this->watsonLowerCase($response);
+// 			$this->checkLevels();
+// 		}
+// 	}
 
      /**
       * @param $watsonResponse

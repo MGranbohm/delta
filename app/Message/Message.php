@@ -36,4 +36,13 @@ class Message extends Model
 		    'response' => $this->watsonResponse()->count() ? $this->watsonResponse->body: "",
 	    ];
     }
+    public function allToArray()
+    {
+        return [
+            'id' => $this->id,
+            'message' => $this->message,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ];
+    }
 }

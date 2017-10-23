@@ -23,13 +23,19 @@ class MessageController extends Controller
         $messages = Message::all();
         $responses = WatsonResponse::all();
 
-        $test = new MoodHandler($responses);
+        $test = new MoodHandler();
         $mood = $test->getGeneralMood();
         $c = collect();
         foreach( $messages as $message)
         {
-            $response = $message->WatsonResponse;
-            $c->push([$message->message, $response->body]);
+            try {
+                $response = $message->WatsonResponse;
+                $c->push([$message->message, $response->body]);
+            }catch (\Exception $e) {
+
+
+            }
+
         }
 
 
@@ -57,55 +63,117 @@ class MessageController extends Controller
 
 	    $watsonResponse = $this->getWatsonResponse($userMessage);
 
+
 	    $message->watsonResponse()->create([
 		    'body' => $watsonResponse,
 	    ]);
+	    $watsonResponse=$message->watsonResponse;
+        $this->setMood($watsonResponse);
 
         return $message;
 
     }
 
+
+
+    /** Returns a json array with all messages and the corresponding watsonResponse.
+     * @return mixed http response
+     */
     public function allMessages()
     {
-        return Message::orderBy('created_at', 'asc')->get();
+        return response(Message::orderBy('created_at', 'asc')->get(), 200);
     }
 
+    /**Returns all messages and all watsonresponses with all infromation avaliable.
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function allResponses()
     {
-        return WatsonResponse::orderBy('created_at', 'asc')->get();
+        $responses = WatsonResponse::orderBy('created_at', 'asc')->get();
+        $messages = collect();
+        foreach ($responses as $response)
+        {
+            $message= $response->message->allToArray();
+            $messages->push($message);
+        }
+        return response($messages,[WatsonResponse::orderBy('created_at', 'asc')->get()], 200);
     }
 
+    /**Returns the message, the watsonResponse, the moodchange factor and the general mood for the input message id.
+     * @param Message $message Input message id.
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function getMessage(Message $message)
+    {
+        $response = $message->watsonResponse;
+        $mood = $message->mood;
+        $responses = WatsonResponse::all();
+        $moodHandler = new MoodHandler();
+        $generalMood = $moodHandler->getGeneralMood();
+
+        return response([$message, $response, $mood,$generalMood], 200);
+    }
+
+    /**Returns the message, the watsonResponse, the moodchange factor and the general mood for the input response id.
+     * @param WatsonResponse $response Input watson response id.
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function getResponse(WatsonResponse $response)
+    {
+        $message = $response->message;
+
+        $mood = $message->mood;
+
+
+        $moodHandler = new MoodHandler();
+        $generalMood = $moodHandler->getGeneralMood();
+        return response([$message, $response, $mood, $generalMood], 200);
+    }
+
+    /**Posts a message and returns the posted message, the watson response and the mood change factor;
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function postMessage(Request $request)
     {
         $message = $this->store($request);
         $response = $message->watsonResponse;
         $mood = $message->mood;
 
-        return response(compact('response','mood'), 201);
+        return response([$message,$response,$mood], 201);
     }
 
-    public function update(Request $request,Message $message)
-    {
-        $request->validate([
-            'message'=>'required'
-        ]);
+//    /**Under construction.
+//     * @param Request $request
+//     * @param Message $message
+//     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+//     */
+//    public function update(Request $request,Message $message)
+//    {
+//        $request->validate([
+//            'message'=>'required'
+//        ]);
+//
+//        $response = $message->watsonResponse;
+//        $mood = $message->mood;
+//        $message->message=$request->message;
+//        $response->body=$this->getWatsonResponse($message->message);
+//        $responses = WatsonResponse::all();
+//        $test = new MoodHandler();
+//        $mood->mood=$test->checkWatsonResponse($response->body);
+//        $message->save();
+//        $response->save();
+//        $mood->save();
+//        return response($message, 200);
+//    }
 
-        $response= $message->watsonResponse;
-        $mood = $message->mood;
-        $message->message=$request->message;
-        $response->body=$this->getWatsonResponse($message->message);
-        $responses = WatsonResponse::all();
-        $test = new MoodHandler($responses);
-        $mood->mood=$test->checkWatsonResponse($response->body);
-        $message->save();
-        $response->save();
-        $mood->save();
-        return response($message, 200);
-    }
-
+    /**Deletes a message and corresponding response and mood change from the chat.
+     * @param Message $message Message id of message to delete:
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function deleteMessage(Message $message)
     {
-        $response= $message->watsonResponse;
+        $response = $message->watsonResponse;
         $mood = $message->mood;
         $message->delete();
         $response->delete();
@@ -113,17 +181,26 @@ class MessageController extends Controller
         return response(null, 204);
     }
 
-    public function getResponse(Message $message)
-    {
-        $response= $message->watsonResponse;
-        return response($response, 200);
-    }
+    /**Returns the general mood at requests point in time.
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+
     public function getGeneralMood()
     {
         $responses = WatsonResponse::all();
-        $test = new MoodHandler($responses);
+        $test = new MoodHandler();
         $mood = $test->getGeneralMood();
         return response($mood, 200);
+    }
+
+    /**Initializes the mood change for the watsonResponse.
+     * @param $watsonResponse
+     */
+    public function setMood($watsonResponse){
+
+        $test = new MoodHandler();
+        $test->watsonLowerCase($watsonResponse);
+
     }
 
     /**
@@ -131,6 +208,7 @@ class MessageController extends Controller
      * @param $message inputmessage
      * @return string   watson response
      */
+
     public function getWatsonResponse($message)
     {
         $api = new WatsonAPI();
