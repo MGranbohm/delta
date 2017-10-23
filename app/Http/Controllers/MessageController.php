@@ -110,7 +110,7 @@ class MessageController extends Controller
     public function postMessage(Request $request)
     {
         $message = $this->store($request);
-        return response($message, 201);
+        return response()->json($message, 201);
     }
 
 //    /**Under construction.
