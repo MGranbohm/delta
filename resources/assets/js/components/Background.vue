@@ -64,7 +64,6 @@
             getMessages() {
                 axios.get(this.posturl +"/messages/all" + this.token)
                     .then(response => {
-                        console.log(response);
                         this.messages = response.data;
                         this.scrollToBottom();
                     }).catch(error => {
@@ -91,10 +90,11 @@
             post() {
                 axios.post(this.posturl +"/message" + this.token, this.getData())
                     .then(response => {
+                        let data = response.data;
                         this.getMessages();
-                        this.getAudio(response.data.response.id);
+                        this.getAudio(data.id);
                         this.clear();
-                        this.skynetChecker(response.data.response.body);
+                        this.skynetChecker(data.response);
                     }).catch(error => {
                     console.log(error);
                 });

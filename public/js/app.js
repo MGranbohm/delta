@@ -1683,7 +1683,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get(this.posturl + "/messages/all" + this.token).then(function (response) {
-                console.log(response);
                 _this2.messages = response.data;
                 _this2.scrollToBottom();
             }).catch(function (error) {
@@ -1715,10 +1714,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this5 = this;
 
             __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post(this.posturl + "/message" + this.token, this.getData()).then(function (response) {
+                var data = response.data;
                 _this5.getMessages();
-                _this5.getAudio(response.data.response.id);
+                _this5.getAudio(data.id);
                 _this5.clear();
-                _this5.skynetChecker(response.data.response.body);
+                _this5.skynetChecker(data.response);
             }).catch(function (error) {
                 console.log(error);
             });
