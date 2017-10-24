@@ -4,6 +4,8 @@ namespace App\Message;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Watson\WatsonResponse;
+use App\Message\Mood;
+
 
 /**
 * This Class sets moode of the watson dude.
@@ -18,6 +20,7 @@ use App\Watson\WatsonResponse;
  	*/
      public function __construct($watsonResponses)
  	{
+ 		Mood::truncate();
  		foreach ($watsonResponses as $response)
  		{
 // 			$response = $object->body;
@@ -33,11 +36,12 @@ use App\Watson\WatsonResponse;
       */
      public function watsonLowerCase($response)
     {
-        $watsonResponseBody = $response->body;
+        $watsonResponseBody = $response->intent;
  		$watsonResponseBody = strtolower($watsonResponseBody);
- 		$response->body=$watsonResponseBody;
+ 		$response->intent=$watsonResponseBody;
  		$response->save();
- 		echo $response;
+ 		//echo $response;
+
  		$this->assignMood($response);
  	}
 
@@ -60,8 +64,9 @@ use App\Watson\WatsonResponse;
       * @return int
       */
      public function checkWatsonResponse($watsonAnswer)
- 	{		
- 		$bad_words = array("fuck","cunt");
+ 	{	
+
+ 		$bad_words = array("Intelligence_mean","Insults");
  		foreach($bad_words as $bad_word)
 		{
     		if (strpos($watsonAnswer, $bad_word) !== false)
@@ -78,15 +83,15 @@ use App\Watson\WatsonResponse;
       * @param $watsonAnswer
       */
      public function assignMood($response)
-    {
-		$result = $this->checkWatsonResponse($response->body);
-
-
-		$message=$response->message;
+    {	
+    	
+		//$result = $this->checkWatsonResponse($response->intent);
+    	$hej = "hej";
+		//$message=$response->mood;
 		$mood = new Mood();
-		$mood->mood=$result;
-		$message->mood()->save($mood);
-		echo $result;
+		$mood->intent=$hej;
+		$response->mood()->save($mood);
+		//echo $result;
 	}
 
      /**

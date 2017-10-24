@@ -25,7 +25,7 @@ class Message extends Model
 
     public function mood()
     {
-    	return $this->hasOne(Mood::class);
+    	return $this->belongsTo(Mood::class);
     }
 
     public function toArray()
