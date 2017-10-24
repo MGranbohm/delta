@@ -21,4 +21,11 @@ class Mood extends Model
 	{
 		return $this->belongsTo(Message::class);
 	}
+//    public function toArray()
+//    {
+//        return [
+//            'id' => $this->id,
+//            'body' => $this->body,
+//        ];
+//    }
 }

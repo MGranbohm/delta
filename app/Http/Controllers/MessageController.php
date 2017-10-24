@@ -68,7 +68,7 @@ class MessageController extends Controller
 		    'body' => $watsonResponse,
 	    ]);
 	    $watsonResponse=$message->watsonResponse;
-//        $this->setMood($watsonResponse);
+        $this->setMood($watsonResponse);
 
         return $message;
 
@@ -99,7 +99,17 @@ class MessageController extends Controller
         $moodHandler = new MoodHandler();
         $generalMood = $moodHandler->getGeneralMood();
 
-        return response([$message, $response, $mood,$generalMood], 200);
+        return response()->json([$message, $response, $mood,$generalMood], 200);
+    }
+
+    /**Return just the watsonResponse for the input watsonResponse id.
+     * @param Message $message
+     * @return \Illuminate\Http\JsonResponse
+     */
+
+    public function getResponse(WatsonResponse $response)
+    {
+        return response()->json($response, 200);
     }
 
 
@@ -160,7 +170,7 @@ class MessageController extends Controller
         $responses = WatsonResponse::all();
         $test = new MoodHandler();
         $mood = $test->getGeneralMood();
-        return response($mood, 200);
+        return response()->json($mood, 200);
     }
 
     /**Initializes the mood change for the watsonResponse.
