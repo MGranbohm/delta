@@ -19,13 +19,12 @@ class Mood extends Model
 
 	public function message()
 	{
-		return $this->belongsTo(Message::class);
+		return $this->hasOne(Message::class);
 	}
-//    public function toArray()
-//    {
-//        return [
-//            'id' => $this->id,
-//            'body' => $this->body,
-//        ];
-//    }
+
+    public function context()
+    {
+        return $this->hasOne(Context::class);
+    }
+
 }

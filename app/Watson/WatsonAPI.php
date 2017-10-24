@@ -42,7 +42,7 @@ class WatsonAPI
             $this->watsonDBinsert($context, $intent, $entity);
 
             $response = $this->getAnswer($output);
-            return $response;
+            return compact('response', 'intent');
         }
     }
 
@@ -87,7 +87,7 @@ class WatsonAPI
      */
     public function watsonDBinsert($contextInput, $intentInput, $entityInput)
     {
-        Context::create([
+        $context = Context::create([
             'context' => $contextInput,
             'intent' => $intentInput,
             'entity' => $entityInput

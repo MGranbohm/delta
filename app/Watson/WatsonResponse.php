@@ -23,6 +23,7 @@ class WatsonResponse extends Model
     	return $this->belongsTo(Message::class);
     }
 
+
     public function toArray()
     {
         return [
@@ -30,6 +31,7 @@ class WatsonResponse extends Model
             'body' => $this->body,
         ];
     }
+
 
 
 }

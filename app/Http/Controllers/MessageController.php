@@ -68,7 +68,9 @@ class MessageController extends Controller
 		    'body' => $watsonResponse,
 	    ]);
 	    $watsonResponse=$message->watsonResponse;
+
         $this->setMood($watsonResponse);
+
 
         return $message;
 
@@ -99,6 +101,7 @@ class MessageController extends Controller
         $moodHandler = new MoodHandler();
         $generalMood = $moodHandler->getGeneralMood();
 
+
         return response()->json([$message, $response, $mood,$generalMood], 200);
     }
 
@@ -111,6 +114,7 @@ class MessageController extends Controller
     {
         return response()->json($response, 200);
     }
+
 
 
     /**Posts a message and returns the posted message, the watson response and the mood change factor;
@@ -171,6 +175,16 @@ class MessageController extends Controller
         $test = new MoodHandler();
         $mood = $test->getGeneralMood();
         return response()->json($mood, 200);
+    }
+
+    /**Initializes the mood change for the watsonResponse.
+     * @param $watsonResponse
+     */
+    public function setMood($watsonResponse){
+
+        $test = new MoodHandler();
+        $test->watsonLowerCase($watsonResponse);
+
     }
 
     /**Initializes the mood change for the watsonResponse.
