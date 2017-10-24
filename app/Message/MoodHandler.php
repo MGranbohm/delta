@@ -12,109 +12,107 @@ use Illuminate\Support\Facades\Log;
 */
 class MoodHandler
 {
-  private $moodLevel = 50;
-     /**
- 	*Construct goes through an array of Strings
- 	*from the database and then passes
- 	*the data. 
- 	*/
-
-
-     /**
-      * @param $watsonResponse
+      /**
+      * converts the responses to lowercase.
       */
-     public function watsonLowerCase($response)
-     {
-      $watsonResponseBody = $response->intent;
-      $watsonResponseBody = strtolower($watsonResponseBody);
-      $response->intent=$watsonResponseBody;
-      $response->save();
- 		//echo $response;
-
-      $this->assignMood($response);
-    }
-
-    public function getRandomMood()
-    {
-     $moodLevel = rand(0,100);
-     return $moodLevel;
-   }
-
-     /**
-      *
-      */
-     public function getLastMood()
-     {
-
-     }
-
-     /**
-      * @param $watsonAnswer
-      * @return int
-      */
-     public function checkWatsonResponse($watsonAnswer)
-     {	
-
-       $bad_words = array("Intelligence_mean","Insults");
-       foreach($bad_words as $bad_word)
-       {
-        if (strpos($watsonAnswer, $bad_word) !== false)
-        {
-          return 3;
-        }else
-        {
-         return -1;
-       }
-     }
-   }
-
-     /**
-      * @param $watsonAnswer
-      */
-     public function assignMood($response)
-     {	
-
-		//$result = $this->checkWatsonResponse($response->intent);
-       $hej = "hej";
-		//$message=$response->mood;
-       $mood = new Mood();
-       $mood->intent=$hej;
-       $response->mood()->save($mood);
-		//echo $result;
-     }
-
-     /**
-      * Checks if the String contains a specific word, then assisning the mood.
-      */
-     public function checkLevels()
-     {
-       if($this->moodLevel < 0)
-       {
-        $this->moodLevel = 0;
-      }
-      if($this->moodLevel > 100)
+      public function watsonLowerCase($response)
       {
-        $this->moodLevel = 100;
+        $watsonResponseBody = $response->intent;
+        $watsonResponseBody = strtolower($watsonResponseBody);
+        $response->intent=$watsonResponseBody;
+        $response->save();
+         
+        $this->assignMood($response);
       }
-    }
 
-    public function getMood($intent)
-    {
+      public function getRandomMood()
+      {
+        $moodLevel = rand(0,100);
+        return $moodLevel;
+      }
+
+      /**
+      * Checks if the user wrote something nice or mean.
+      * Return possitive number for bad things and negative 
+      * number for nice responses.
+      */
+      public function checkWatsonResponse($watsonAnswer)
+      {	
+
+        $bad_words = array("Intelligence_mean","Insults");
+        foreach($bad_words as $bad_word)
+        {
+          if (strpos($watsonAnswer, $bad_word) !== false)
+          {
+              return 3;
+          }else
+          {
+             return -1;
+          }
+        }
+      }
+
+      /**
+      * @param $watsonAnswer
+      */
+      public function assignMood($response)
+      {	
+
+        //$result = $this->checkWatsonResponse($response->intent);
+        //$message=$response->mood;
+        $mood = new Mood();
+        $mood->intent=$hej;
+        $response->mood()->save($mood);
+        //echo $result;
+      }
+
+      /**
+      * Checks if the mood goes above or below maximum level.
+      */
+      public function checkLevels($generalMood)
+      {
+        if( $generalMood < 0)
+        {
+        
+          $generalMood = 0;
+        
+        }
+        if( $generalMood > 100)
+        {
+
+          $generalMood = 100;
       
+        }
+        return $generalMood;
+      }
 
-    }
+      /**
+      * decodes json objects intent
+      */
+      public function getMood($intent)
+      {
 
-   public function getGeneralMood()
-   {
-     $generalMood = 50;
-     $moods = Mood::all();
-     foreach($moods as  $mood)
-     {
-      $generalMood=$generalMood+$mood->mood;
-    }
-    return $generalMood;
-  }
+        $obj = json_decode($intent);
+        $intent = $obj->{'intent'};
+      
+        return  $this->checkWatsonResponse($intent);
+      }
 
-//skicka in en string. få tillbaka ett värde.
+      public function getGeneralMood()
+      {
 
+        $generalMood = 50;
+        $moods = Mood::all();
+        
+        foreach($moods as  $mood)
+        {
+      
+          $generalMood=$generalMood+$mood->mood;
+          
+        }
+
+        $generalMood = $this->checkLevels($generalMood);
+
+        return $generalMood;
+      }
 }

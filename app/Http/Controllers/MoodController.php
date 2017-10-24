@@ -13,7 +13,7 @@ class MoodController extends Controller
 	public function check()
 	{
 		$watsonResponse = Context::all();
-		$test = new MoodHandler($watsonResponse);
+		$test = new MoodHandler();
 		$answer = $test->getGeneralMood();
 		dd($answer);
 		return view('mood');
