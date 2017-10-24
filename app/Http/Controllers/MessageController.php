@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Message\MoodHandler;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class MessageController
@@ -167,20 +168,20 @@ class MessageController extends Controller
     public function getMessageApi($message)
     {
         $api = new WatsonAPI();
-        $moodHandler = new MoodHander();
+        $moodHandler = new MoodHandler();
 
         $result = $api->getMessage($message);
 
         $message = Message::create([
             'message' => $message
         ]);
-
+      //  Log::info($result);
         $message->mood()->create([
-            'mood' => $moodHandler->getMood($result->intent),
+            'mood' => $moodHandler->getMood($result['intent']),
         ]);
 
         $message->watsonResponse()->create([
-            'body' => $result->response,
+            'body' => $result['response'],
         ]);
 
         return $message;
