@@ -8,8 +8,4 @@ class Context extends Model
 {
     protected $guarded = [];
 
-    public function mood()
-	{
-		return $this->belongsTo(Mood::class);
-	}
 }

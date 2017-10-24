@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Watson\WatsonResponse;
 use App\Message\Mood;
-
+use Illuminate\Support\Facades\Log;
 
 /**
 * This Class sets moode of the watson dude.
@@ -99,8 +99,14 @@ use App\Message\Mood;
  		}
  	}
 
+ 	public function getMood($intent)
+ 	{
+ 		Log::info($intent);
 
- 	public function getGeneralMood(){
+ 	}
+
+ 	public function getGeneralMood()
+ 	{
          $generalMood = 50;
          $moods = Mood::all();
          foreach($moods as  $mood)
