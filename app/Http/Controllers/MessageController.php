@@ -51,27 +51,7 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'message'=>'required'
-        ]);
-
-        $userMessage = $request->message;
-
-        $message = Message::create([
-            'message' => $userMessage
-        ]);
-
-	    $watsonResponse = $this->getWatsonResponse($userMessage);
-
-
-	    $message->watsonResponse()->create([
-		    'body' => $watsonResponse,
-	    ]);
-	    $watsonResponse=$message->watsonResponse;
-//        $this->setMood($watsonResponse);
-
-        return $message;
-
+     
     }
 
 
@@ -109,7 +89,12 @@ class MessageController extends Controller
      */
     public function postMessage(Request $request)
     {
-        $message = $this->store($request);
+        $request->validate([
+            'message'=>'required'
+        ]);
+
+        $message = $this->getMessageApi($request->message);
+
         return response()->json($message, 201);
     }
 
@@ -179,9 +164,25 @@ class MessageController extends Controller
      * @return string   watson response
      */
 
-    public function getWatsonResponse($message)
+    public function getMessageApi($message)
     {
         $api = new WatsonAPI();
-		return $api->getMessage($message);
+        $moodHandler = new MoodHander();
+
+        $result = $api->getMessage($message);
+
+        $message = Message::create([
+            'message' => $message
+        ]);
+
+        $message->mood()->create([
+            'mood' => $moodHandler->getMood($result->intent),
+        ]);
+
+        $message->watsonResponse()->create([
+            'body' => $result->response,
+        ]);
+
+        return $message;
     }
 }
