@@ -11,6 +11,7 @@
                 mood: '',
                 messages: '',
                 audio: '',
+                token: '?token=32oVMwYhb8Tobd4O5khv0rkrZYzsLFRMEmpSt4sw3ODZdL4wDSf9GZolUkNY',
             }
         },
 
@@ -50,7 +51,7 @@
             },
 
             getAudio(message) {
-                axios.get(this.posturl + "/sound/" + message)
+                axios.get(this.posturl + "/sound/" + message + this.token)
                     .then(response => {
                         this.audio = response.data;
                         let music = this.$refs.audio;
@@ -61,7 +62,7 @@
             },
 
             getMessages() {
-                axios.get(this.posturl +"/messages/all")
+                axios.get(this.posturl +"/messages/all" + this.token)
                     .then(response => {
                         this.messages = response.data;
                         this.scrollToBottom();
@@ -87,12 +88,13 @@
             },
 
             post() {
-                axios.post(this.posturl +"/message", this.getData())
+                axios.post(this.posturl +"/message" + this.token, this.getData())
                     .then(response => {
+                        let data = response.data;
                         this.getMessages();
-                        this.getAudio(response.data.response.id);
+                        this.getAudio(data.id);
                         this.clear();
-                        this.skynetChecker(response.data.response.body);
+                        this.skynetChecker(data.response);
                     }).catch(error => {
                     console.log(error);
                 });
