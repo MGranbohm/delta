@@ -1636,7 +1636,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             message: '',
             mood: '',
             messages: '',
-            audio: ''
+            audio: '',
+            token: '?token=32oVMwYhb8Tobd4O5khv0rkrZYzsLFRMEmpSt4sw3ODZdL4wDSf9GZolUkNY'
         };
     },
     mounted: function mounted() {
@@ -1668,7 +1669,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         getAudio: function getAudio(message) {
             var _this = this;
 
-            __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get(this.posturl + "/sound/" + message).then(function (response) {
+            __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get(this.posturl + "/sound/" + message + this.token).then(function (response) {
                 _this.audio = response.data;
                 var music = _this.$refs.audio;
                 setTimeout(function () {
@@ -1681,7 +1682,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         getMessages: function getMessages() {
             var _this2 = this;
 
-            __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get(this.posturl + "/messages/all").then(function (response) {
+            __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get(this.posturl + "/messages/all" + this.token).then(function (response) {
                 _this2.messages = response.data;
                 _this2.scrollToBottom();
             }).catch(function (error) {
@@ -1712,11 +1713,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         post: function post() {
             var _this5 = this;
 
-            __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post(this.posturl + "/message", this.getData()).then(function (response) {
+            __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post(this.posturl + "/message" + this.token, this.getData()).then(function (response) {
+                var data = response.data;
                 _this5.getMessages();
-                _this5.getAudio(response.data.response.id);
+                _this5.getAudio(data.id);
                 _this5.clear();
-                _this5.skynetChecker(response.data.response.body);
+                _this5.skynetChecker(data.response);
             }).catch(function (error) {
                 console.log(error);
             });

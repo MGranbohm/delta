@@ -68,7 +68,7 @@ class MessageController extends Controller
 		    'body' => $watsonResponse,
 	    ]);
 	    $watsonResponse=$message->watsonResponse;
-        $this->setMood($watsonResponse);
+//        $this->setMood($watsonResponse);
 
         return $message;
 
@@ -81,23 +81,11 @@ class MessageController extends Controller
      */
     public function allMessages()
     {
-        return response(Message::orderBy('created_at', 'asc')->get(), 200);
+    	$messages = Message::orderBy('created_at', 'asc')->get();
+        return response()->json($messages, 200);
     }
 
-    /**Returns all messages and all watsonresponses with all infromation avaliable.
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
-     */
-    public function allResponses()
-    {
-        $responses = WatsonResponse::orderBy('created_at', 'asc')->get();
-        $messages = collect();
-        foreach ($responses as $response)
-        {
-            $message= $response->message->allToArray();
-            $messages->push($message);
-        }
-        return response($messages,[WatsonResponse::orderBy('created_at', 'asc')->get()], 200);
-    }
+
 
     /**Returns the message, the watsonResponse, the moodchange factor and the general mood for the input message id.
      * @param Message $message Input message id.
@@ -114,21 +102,6 @@ class MessageController extends Controller
         return response([$message, $response, $mood,$generalMood], 200);
     }
 
-    /**Returns the message, the watsonResponse, the moodchange factor and the general mood for the input response id.
-     * @param WatsonResponse $response Input watson response id.
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
-     */
-    public function getResponse(WatsonResponse $response)
-    {
-        $message = $response->message;
-
-        $mood = $message->mood;
-
-
-        $moodHandler = new MoodHandler();
-        $generalMood = $moodHandler->getGeneralMood();
-        return response([$message, $response, $mood, $generalMood], 200);
-    }
 
     /**Posts a message and returns the posted message, the watson response and the mood change factor;
      * @param Request $request
@@ -137,10 +110,7 @@ class MessageController extends Controller
     public function postMessage(Request $request)
     {
         $message = $this->store($request);
-        $response = $message->watsonResponse;
-        $mood = $message->mood;
-
-        return response([$message,$response,$mood], 201);
+        return response()->json($message, 201);
     }
 
 //    /**Under construction.

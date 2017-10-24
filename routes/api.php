@@ -16,8 +16,6 @@ use Illuminate\Http\Request;
 
     Route::get('messages/all','MessageController@allMessages');
     Route::get('messages/{message}', 'MessageController@getMessage');
-    Route::get('responses/all','MessageController@allResponses');
-    Route::get('responses/{response}','MessageController@getResponse');
     Route::post('message', 'MessageController@postMessage');
     Route::delete('messages/{message}', 'MessageController@deleteMessage');
     Route::patch('messages/{message}', 'MessageController@update');
