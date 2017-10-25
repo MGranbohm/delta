@@ -63,11 +63,11 @@ class WatsonAPI
     {
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, "https://gateway-fra.watsonplatform.net/conversation/api/v1/workspaces/5f1d789d-abff-4597-880f-faa758f553b7/message?version=2017-05-26");
+        curl_setopt($ch, CURLOPT_URL, "https://gateway-fra.watsonplatform.net/conversation/api/v1/workspaces/968a5a54-7b22-43e8-8472-67654b22def9/message?version=2017-05-26");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, '{"input": {"text": "'.$message.'"}, "Context": {"conversation_id": "6db63f0d-c5ca-4d65-a309-69249f036d12", "system": {"dialog_stack":[{"dialog_node":"root"}], "dialog_turn_counter": 1, "dialog_request_counter": 1}}}');
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_USERPWD, "7eff2092-b37a-4b23-a754-48a6c83e4266" . ":" . "jK8hBg5gtQFa");
+        curl_setopt($ch, CURLOPT_USERPWD, "facdcd03-2712-4085-b640-4cde1378243c" . ":" . "6HTS83vNjGiV");
         $headers = array();
         $headers[] = "Content-Type: application/json";
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -140,10 +140,10 @@ class WatsonAPI
         $ch = curl_init();
 
         if($message === ''){
-            curl_setopt($ch, CURLOPT_URL, "https://gateway-fra.watsonplatform.net/conversation/api/v1/workspaces/5f1d789d-abff-4597-880f-faa758f553b7/message?version=2017-05-26");
+            curl_setopt($ch, CURLOPT_URL, "https://gateway-fra.watsonplatform.net/conversation/api/v1/workspaces/968a5a54-7b22-43e8-8472-67654b22def9/message?version=2017-05-26");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_USERPWD, "7eff2092-b37a-4b23-a754-48a6c83e4266" . ":" . "jK8hBg5gtQFa");
+            curl_setopt($ch, CURLOPT_USERPWD, "facdcd03-2712-4085-b640-4cde1378243c" . ":" . "6HTS83vNjGiV");
 
             $headers = array();
             $headers[] = "Content-Type: application/json";
@@ -158,14 +158,14 @@ class WatsonAPI
         }
         else
 
-            curl_setopt($ch, CURLOPT_URL, "https://gateway-fra.watsonplatform.net/conversation/api/v1/workspaces/5f1d789d-abff-4597-880f-faa758f553b7/message?version=2017-05-26");
+            curl_setopt($ch, CURLOPT_URL, "https://gateway-fra.watsonplatform.net/conversation/api/v1/workspaces/968a5a54-7b22-43e8-8472-67654b22def9/message?version=2017-05-26");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, '{"input": {"text": "'.$message.'"}, "context":'.$context.'}'); // med context objekt
 //        curl_setopt($ch, CURLOPT_POSTFIELDS, '{"input": {"text": "'.$message.'"}}'); // without context object
 //        curl_setopt($ch, CURLOPT_POSTFIELDS, '{"intents":['.$intent.'],"entities":'.$entity.',"input": {"text": "'.$message.'"}, "Context":'.$context.'}'); // with intents, entity and context
 
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_USERPWD, "7eff2092-b37a-4b23-a754-48a6c83e4266" . ":" . "jK8hBg5gtQFa");
+        curl_setopt($ch, CURLOPT_USERPWD, "facdcd03-2712-4085-b640-4cde1378243c" . ":" . "6HTS83vNjGiV");
 
         $headers = array();
         $headers[] = "Content-Type: application/json";
