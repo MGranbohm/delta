@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Message\MoodHandler;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class MessageController
@@ -51,29 +52,24 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-
         $request->validate([
             'message'=>'required'
         ]);
-
+        $api = new WatsonAPI();
+        $moodHandler = new MoodHandler();
         $userMessage = $request->message;
-
+        $result = $api->getMessage($userMessage);
         $message = Message::create([
             'message' => $userMessage
         ]);
-
-	    $watsonResponse = $this->getWatsonResponse($userMessage);
-
-
-	    $message->watsonResponse()->create([
-		    'body' => $watsonResponse,
-	    ]);
-	    $watsonResponse=$message->watsonResponse;
-
-        $this->setMood($watsonResponse);
-
-
+        $message->mood()->create([
+            'mood' => $moodHandler->getMood($result['intent']),
+        ]);
+        $message->watsonResponse()->create([
+            'body' => $result['response'],
+        ]);
         return $message;
+
 
 
     }
@@ -129,7 +125,7 @@ class MessageController extends Controller
             'message'=>'required'
         ]);
 
-        $message = $this->getMessageApi($request->message);
+        $message = $this->store($request);
 
         return response()->json($message, 201);
     }
@@ -184,42 +180,5 @@ class MessageController extends Controller
         return response()->json($mood, 200);
     }
 
-    /**Initializes the mood change for the watsonResponse.
-     * @param $watsonResponse
-     */
-    public function setMood($watsonResponse){
 
-        $test = new MoodHandler();
-        $test->watsonLowerCase($watsonResponse);
-
-    }
-
-
-    /**
-     * Gets a watson response depending on the input message.
-     * @param $message inputmessage
-     * @return string   watson response
-     */
-
-    public function getMessageApi($message)
-    {
-        $api = new WatsonAPI();
-        $moodHandler = new MoodHander();
-
-        $result = $api->getMessage($message);
-
-        $message = Message::create([
-            'message' => $message
-        ]);
-
-        $message->mood()->create([
-            'mood' => $moodHandler->getMood($result->intent),
-        ]);
-
-        $message->watsonResponse()->create([
-            'body' => $result->response,
-        ]);
-
-        return $message;
-    }
 }

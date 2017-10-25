@@ -56,7 +56,7 @@ class WatsonAPI
         $this->watsonDBinsert($context, $intent, $entity);
         $response = $this->getAnswer($output);
 
-        return $response;
+        return compact('response', 'intent');
     }
 
     public function conversationContext($message)
