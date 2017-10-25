@@ -1,10 +1,13 @@
 <?php
+
 namespace App\Message;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Watson\WatsonResponse;
 use App\Message\Mood;
 use Illuminate\Support\Facades\Log;
+
 /**
  * This Class sets moode of the watson dude.
  */
@@ -25,8 +28,10 @@ class MoodHandler
     public function getRandomMood()
     {
         $moodLevel = rand(0,100);
+
         return $moodLevel;
     }
+
     /**
      * Checks if the user wrote something nice or mean.
      * Return possitive number for bad things and negative
@@ -40,12 +45,14 @@ class MoodHandler
             if (strpos($watsonAnswer, $bad_word) !== false)
             {
                 return 3;
-            }else
+            }
+            else
             {
                 return -1;
             }
         }
     }
+
     /**
      * @param $watsonAnswer
      */
@@ -58,6 +65,7 @@ class MoodHandler
         $response->mood()->save($mood);
         //echo $result;
     }
+
     /**
      * Checks if the mood goes above or below maximum level.
      */
@@ -65,17 +73,16 @@ class MoodHandler
     {
         if( $generalMood < 0)
         {
-
             $generalMood = 0;
-
         }
         if( $generalMood > 100)
         {
             $generalMood = 100;
-
         }
+
         return $generalMood;
     }
+
     /**
      * decodes json objects intent
      */
@@ -86,6 +93,7 @@ class MoodHandler
 
         return  $this->checkWatsonResponse($intent);
     }
+
     public function getGeneralMood()
     {
         $generalMood = 50;
@@ -93,11 +101,11 @@ class MoodHandler
 
         foreach($moods as  $mood)
         {
-
             $generalMood=$generalMood+$mood->mood;
-
         }
+
         $generalMood = $this->checkLevels($generalMood);
+        
         return $generalMood;
     }
 }
