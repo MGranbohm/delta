@@ -24,4 +24,14 @@ class WatsonResponse extends Model
     }
 
 
+    public function toArray()
+    {
+        return [
+            'id' => $this->id,
+            'body' => $this->body,
+        ];
+    }
+
+
+
 }

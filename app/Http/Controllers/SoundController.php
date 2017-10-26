@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\SoundAPI\VoiceRSS;
 use App\Watson\WatsonResponse;
+use Illuminate\Support\Facades\Log;
 
 class SoundController extends Controller
 {
 
 	public function watsonSound($message_id)
 	{
+		
 		$response = WatsonResponse::find($message_id);
 		$tts = new VoiceRSS;
 		$voice = $tts->speech([

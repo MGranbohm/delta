@@ -21,4 +21,9 @@ class Mood extends Model
 	{
 		return $this->belongsTo(Message::class);
 	}
+
+    public function context()
+    {
+        return $this->hasOne(Context::class);
+    }    
 }

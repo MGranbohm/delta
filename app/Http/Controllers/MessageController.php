@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Message\MoodHandler;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class MessageController
@@ -28,19 +29,15 @@ class MessageController extends Controller
         $c = collect();
         foreach( $messages as $message)
         {
-            try {
+            try
+            {
                 $response = $message->WatsonResponse;
                 $c->push([$message->message, $response->body]);
-            }catch (\Exception $e) {
-
-
             }
-
+            catch (\Exception $e)
+            {
+            }
         }
-
-
-
-
         return view( 'testInput', compact('messages', 'responses', 'mood', 'c'));
     }
 
@@ -54,27 +51,21 @@ class MessageController extends Controller
         $request->validate([
             'message'=>'required'
         ]);
-
+        $api = new WatsonAPI();
+        $moodHandler = new MoodHandler();
         $userMessage = $request->message;
-
+        $result = $api->getMessage($userMessage);
         $message = Message::create([
             'message' => $userMessage
         ]);
-
-	    $watsonResponse = $this->getWatsonResponse($userMessage);
-
-
-	    $message->watsonResponse()->create([
-		    'body' => $watsonResponse,
-	    ]);
-	    $watsonResponse=$message->watsonResponse;
-//        $this->setMood($watsonResponse);
-
+        $message->mood()->create([
+            'mood' => $moodHandler->getMood($result['intent']),
+        ]);
+        $message->watsonResponse()->create([
+            'body' => $result['response'],
+        ]);
         return $message;
-
     }
-
-
 
     /** Returns a json array with all messages and the corresponding watsonResponse.
      * @return mixed http response
@@ -85,8 +76,6 @@ class MessageController extends Controller
         return response()->json($messages, 200);
     }
 
-
-
     /**Returns the message, the watsonResponse, the moodchange factor and the general mood for the input message id.
      * @param Message $message Input message id.
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
@@ -94,22 +83,34 @@ class MessageController extends Controller
     public function getMessage(Message $message)
     {
         $response = $message->watsonResponse;
-        $mood = $message->mood;
-        $responses = WatsonResponse::all();
         $moodHandler = new MoodHandler();
         $generalMood = $moodHandler->getGeneralMood();
 
-        return response([$message, $response, $mood,$generalMood], 200);
+        return response()->json([$message, $response,$generalMood], 200);
     }
 
+    /**Return just the watsonResponse for the input watsonResponse id.
+     * @param Message $message
+     * @return \Illuminate\Http\JsonResponse
+     */
 
+    public function getResponse(WatsonResponse $response)
+    {
+        return response()->json($response, 200);
+    }
+    
     /**Posts a message and returns the posted message, the watson response and the mood change factor;
      * @param Request $request
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function postMessage(Request $request)
     {
+        $request->validate([
+            'message'=>'required'
+        ]);
+
         $message = $this->store($request);
+
         return response()->json($message, 201);
     }
 
@@ -154,34 +155,10 @@ class MessageController extends Controller
     /**Returns the general mood at requests point in time.
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-
     public function getGeneralMood()
     {
-        $responses = WatsonResponse::all();
         $test = new MoodHandler();
         $mood = $test->getGeneralMood();
-        return response($mood, 200);
-    }
-
-    /**Initializes the mood change for the watsonResponse.
-     * @param $watsonResponse
-     */
-    public function setMood($watsonResponse){
-
-        $test = new MoodHandler();
-        $test->watsonLowerCase($watsonResponse);
-
-    }
-
-    /**
-     * Gets a watson response depending on the input message.
-     * @param $message inputmessage
-     * @return string   watson response
-     */
-
-    public function getWatsonResponse($message)
-    {
-        $api = new WatsonAPI();
-		return $api->getMessage($message);
+        return response()->json($mood, 200);
     }
 }
