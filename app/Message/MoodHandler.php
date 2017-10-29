@@ -34,21 +34,25 @@ class MoodHandler
 
     /**
      * Checks if the user wrote something nice or mean.
-     * Return possitive number for bad things and negative
+     * Return negative numbers for bad things and possitive
      * number for nice responses.
      */
     public function checkWatsonResponse($watsonAnswer)
     {
-        $bad_words = array("Intelligence_mean","Insults");
-        foreach($bad_words as $bad_word)
-        {
-            if (strpos($watsonAnswer, $bad_word) !== false)
-            {
-                return 3;
+        $bad_words = array("intelligence_mean","insults","skynet");
+        $nice_words = array("flirting","inteligence_nice");
+        
+        foreach($bad_words as $bad_word) {
+            if (strpos($watsonAnswer, $bad_word) !== false) {
+                return -3;
             }
-            else
-            {
-                return -1;
+        }
+
+        foreach($nice_words as $nice_word ) {
+            if (strpos($watsonAnswer, $nice_word) !== false) {
+                return 4;
+            } else {
+                return 1;
             }
         }
     }
@@ -71,12 +75,11 @@ class MoodHandler
      */
     public function checkLevels($generalMood)
     {
-        if( $generalMood < 0)
-        {
+        if( $generalMood < 0 ) {
             $generalMood = 0;
         }
-        if( $generalMood > 100)
-        {
+
+        if( $generalMood > 100 ) {
             $generalMood = 100;
         }
 
@@ -99,8 +102,7 @@ class MoodHandler
         $generalMood = 50;
         $moods = Mood::all();
 
-        foreach($moods as  $mood)
-        {
+        foreach($moods as  $mood) {
             $generalMood=$generalMood+$mood->mood;
         }
 
