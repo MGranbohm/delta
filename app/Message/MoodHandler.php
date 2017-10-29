@@ -44,7 +44,7 @@ class MoodHandler
         
         foreach($bad_words as $bad_word) {
             if (strpos($watsonAnswer, $bad_word) !== false) {
-                return -3;
+                return -40;
             }
         }
 
@@ -97,17 +97,18 @@ class MoodHandler
         return  $this->checkWatsonResponse($intent);
     }
 
-    public function getGeneralMood()
+    public function getGeneralMood($intent)
     {
-        $generalMood = 50;
-        $moods = Mood::all();
-
-        foreach($moods as  $mood) {
-            $generalMood=$generalMood+$mood->mood;
+        $rows = Mood::count();
+        
+        if( $rows == 0  ){
+            $generalMood = 50;    
+        }else{
+            $latestGeneralMood = Mood::latest()->first()->general_mood;
+            $differenceMood = $this->checkWatsonResponse($intent);
+            $generalMood = $latestGeneralMood + $differenceMood;
         }
 
-        $generalMood = $this->checkLevels($generalMood);
-        
-        return $generalMood;
+        return $this->checkLevels($generalMood);
     }
 }
