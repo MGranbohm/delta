@@ -2,7 +2,7 @@
 @section('content')
 
 <background posturl="{{ url("/api/") }}" inline-template>
-	<div id="particles-js" class="background" v-bind:class="[mood]">
+	<div id="particles-js" class="background" v-bind:class="[mood]" v-bind:style="style">
 		<div class="modal is-active">
 		  <div class="modal-content">
 		    <article class="message">

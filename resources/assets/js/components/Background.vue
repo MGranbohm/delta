@@ -11,6 +11,7 @@
                 mood: '',
                 messages: '',
                 audio: '',
+                style: '',
                 token: '?token=32oVMwYhb8Tobd4O5khv0rkrZYzsLFRMEmpSt4sw3ODZdL4wDSf9GZolUkNY',
             }
         },
@@ -64,7 +65,7 @@
             getMessages() {
                 axios.get(this.posturl +"/messages/all" + this.token)
                     .then(response => {
-//                        console.log(response);
+                        console.log(response);
                         this.messages = response.data;
                         this.scrollToBottom();
                     }).catch(error => {
@@ -77,7 +78,16 @@
                 setTimeout(() => { this.chatBox.scrollTop = this.chatBox.scrollHeight; }, 0);
             },
 
-            skynetChecker(message) {
+            moodChecker(mood) {
+                let color = mood + ", 0, 0, 1";
+                this.style = "background-color:rgba(" + color + ");"
+
+                if(mood > 220) {
+                    this.activateSkynet();
+                }
+            },
+
+            activateSkynet() {
                 if(message.includes("Activating Skynet")) {
                     this.mildyAngry();
                 }
@@ -94,8 +104,8 @@
                         let data = response.data.message;
                         this.getMessages();
                         this.getAudio(data.id);
+                        this.moodChecker(data.general_mood);
                         this.clear();
-                        this.skynetChecker(data.response);
                     }).catch(error => {
                     console.log(error);
                 });

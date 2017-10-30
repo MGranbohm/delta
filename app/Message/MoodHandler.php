@@ -13,18 +13,6 @@ use Illuminate\Support\Facades\Log;
  */
 class MoodHandler
 {
-    /**
-     * converts the responses to lowercase.
-     */
-    public function watsonLowerCase($response)
-    {
-        $watsonResponseBody = $response->intent;
-        $watsonResponseBody = strtolower($watsonResponseBody);
-        $response->intent=$watsonResponseBody;
-        $response->save();
-
-        $this->assignMood($response);
-    }
     public function getRandomMood()
     {
         $moodLevel = rand(0,100);
@@ -44,30 +32,17 @@ class MoodHandler
         
         foreach($bad_words as $bad_word) {
             if (strpos($watsonAnswer, $bad_word) !== false) {
-                return -40;
+                return + 100;
             }
         }
 
         foreach($nice_words as $nice_word ) {
             if (strpos($watsonAnswer, $nice_word) !== false) {
-                return 4;
+                return 10;
             } else {
-                return 1;
+                return 40;
             }
         }
-    }
-
-    /**
-     * @param $watsonAnswer
-     */
-    public function assignMood($response)
-    {
-        //$result = $this->checkWatsonResponse($response->intent);
-        //$message=$response->mood;
-        $mood = new Mood();
-        $mood->intent=$hej;
-        $response->mood()->save($mood);
-        //echo $result;
     }
 
     /**
@@ -79,8 +54,8 @@ class MoodHandler
             $generalMood = 0;
         }
 
-        if( $generalMood > 100 ) {
-            $generalMood = 100;
+        if( $generalMood > 255 ) {
+            $generalMood = 255;
         }
 
         return $generalMood;
