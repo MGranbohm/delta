@@ -9,18 +9,17 @@ use App\Watson\WatsonResponse;
 use Illuminate\Support\Facades\Log;
 
 /**
- * @resource sound
+ * @resource Sound
  *
- * Class SoundController
  * @package App\Http\Controllers
  */
 
 class SoundController extends Controller
 {
     /**
-     * api/sound/{id}
+     * Convert to Sound
      *
-     * Returns mp3 file in raw base 64 encoded data.
+     * Converts a response to audio. Returns mp3 file in raw base 64 encoded data.
      * @param $message_id
      * @return array
      */

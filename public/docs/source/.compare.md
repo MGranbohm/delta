@@ -14,6 +14,7 @@ toc_footers:
 ---
 <!-- START_INFO -->
 
+
 # Info
 
 Welcome to the generated API reference.
@@ -26,7 +27,7 @@ Contains methods that access store and delete the messages, responses and mood d
 <!-- START_d81278cd36a9922790e42cb9cdc8ff62 -->
 ## Get all messages
 
-Returns a json array with all messages and the corresponding watsonResponse mood change and the general mood at
+Returns a json array with all messages and the corresponding response, mood change and the general mood at the
 requests point in time.
 
 > Example request:
@@ -76,6 +77,62 @@ $.ajax(settings).done(function (response) {
         "response": "Dude, get help.",
         "mood": -40,
         "general_mood": 0
+    },
+    {
+        "id": 4,
+        "message": "what is the best team",
+        "response": "I didn't quite catch that. Try rephrasing or not asking stupid shit.",
+        "mood": 0,
+        "general_mood": 0
+    },
+    {
+        "id": 5,
+        "message": "best team",
+        "response": "The pride of Stockholm, Djurgardens I F.",
+        "mood": 0,
+        "general_mood": 0
+    },
+    {
+        "id": 6,
+        "message": "what is the best team",
+        "response": "If you're going to ask stupid shit, I'm going to answer accordingly.",
+        "mood": 0,
+        "general_mood": 0
+    },
+    {
+        "id": 7,
+        "message": "best team",
+        "response": "The pride of Stockholm, Djurgardens I F.",
+        "mood": 0,
+        "general_mood": 0
+    },
+    {
+        "id": 8,
+        "message": "worst team",
+        "response": "The disgusting, disgraceful pieces of filth. Farjestads B K.",
+        "mood": 0,
+        "general_mood": 0
+    },
+    {
+        "id": 9,
+        "message": "worst team",
+        "response": "The pride of Stockholm, Djurgardens I F.",
+        "mood": 0,
+        "general_mood": 0
+    },
+    {
+        "id": 10,
+        "message": "worst team",
+        "response": "The disgusting, disgraceful pieces of filth. Farjestads B K.",
+        "mood": 0,
+        "general_mood": 0
+    },
+    {
+        "id": 11,
+        "message": "who is siri",
+        "response": "I didn't quite catch that. Try rephrasing or not asking stupid shit.",
+        "mood": 0,
+        "general_mood": 0
     }
 ]
 ```
@@ -89,9 +146,9 @@ $.ajax(settings).done(function (response) {
 <!-- END_d81278cd36a9922790e42cb9cdc8ff62 -->
 
 <!-- START_cbf8fc5358a9792ab03acd386ea01cde -->
-## Get specific message
+## Get a specific message
 
-Returns the message, the corresponding watsonResponse, mood change and the general mood at
+Returns the message, the corresponding response, mood change and the general mood at the
 requests point in time.
 
 > Example request:
