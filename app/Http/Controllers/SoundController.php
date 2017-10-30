@@ -7,13 +7,26 @@ use App\SoundAPI\VoiceRSS;
 use App\Watson\WatsonResponse;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * @resource sound
+ *
+ * Class SoundController
+ * @package App\Http\Controllers
+ */
+
 class SoundController extends Controller
 {
-
-	public function watsonSound($message_id)
+    /**
+     * api/sound/{id}
+     *
+     * Returns mp3 file in raw base 64 encoded data.
+     * @param $message_id
+     * @return array
+     */
+	public function watsonSound($id)
 	{
 		
-		$response = WatsonResponse::find($message_id);
+		$response = WatsonResponse::find($id);
 		$tts = new VoiceRSS;
 		$voice = $tts->speech([
 			'key' => 'accee06bc1c84ae3919f4b87255c263c',

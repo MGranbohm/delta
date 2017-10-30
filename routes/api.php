@@ -15,19 +15,11 @@ use Illuminate\Http\Request;
 
 
     Route::get('messages/all','MessageController@allMessages');
-    Route::get('messages/{message}', 'MessageController@getMessage');
-
-    Route::get('responses/{response}', 'MessageController@getResponse');
-
-
+    Route::get('messages/{id}', 'MessageController@getMessage');
+    Route::get('responses/{id}', 'MessageController@getResponse');
     Route::post('message', 'MessageController@postMessage');
-    Route::delete('messages/{message}', 'MessageController@deleteMessage');
-    Route::patch('messages/{message}', 'MessageController@update');
-    Route::get('/sound/{WatsonResponse}', 'SoundController@watsonSound');
-
-    Route::post('register', 'Auth\RegisterController@register');
-    Route::post('login', 'Auth\LoginController@login');
-    Route::post('logout', 'Auth\LoginController@logout');
+    Route::delete('messages/{id}', 'MessageController@deleteMessage');
+    Route::get('/sound/{id}', 'SoundController@watsonSound');
 
 
 
