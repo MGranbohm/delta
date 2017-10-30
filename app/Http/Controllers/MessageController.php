@@ -27,7 +27,7 @@ class MessageController extends Controller
         $responses = WatsonResponse::all();
 
         $test = new MoodHandler();
-        $mood = $test->getGeneralMood();
+//        $mood = $test->getGeneralMood();
         $c = collect();
         foreach( $messages as $message)
         {
@@ -94,10 +94,10 @@ class MessageController extends Controller
         $message = $id;
         $response = $message->watsonResponse;
         $moodHandler = new MoodHandler();
-        $generalMood = $moodHandler->getGeneralMood();
 
 
-        return response()->json(compact('message', 'response', 'generalMood'), 200);
+
+        return response()->json(compact('message', 'response'), 200);
     }
 
     /**
