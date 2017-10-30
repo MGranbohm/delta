@@ -1637,6 +1637,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             mood: '',
             messages: '',
             audio: '',
+            style: '',
             token: '?token=32oVMwYhb8Tobd4O5khv0rkrZYzsLFRMEmpSt4sw3ODZdL4wDSf9GZolUkNY'
         };
     },
@@ -1683,7 +1684,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get(this.posturl + "/messages/all" + this.token).then(function (response) {
-                //                        console.log(response);
+                console.log(response);
                 _this2.messages = response.data;
                 _this2.scrollToBottom();
             }).catch(function (error) {
@@ -1698,18 +1699,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.chatBox.scrollTop = _this3.chatBox.scrollHeight;
             }, 0);
         },
-        skynetChecker: function skynetChecker(message) {
+        moodChecker: function moodChecker(mood) {
+            var color = "";
+            if (mood > 100) {
+                color = mood + ", 0, 0, 1";
+            } else if (mood <= 100) {
+                var newMod = 255 - mood;
+                newMod = newMod - 50;
+                color = newMod + "," + newMod + "," + newMod + ", 1";
+            }
+
+            this.style = "background-color:rgba(" + color + ");";
+            console.log(mood);
+            if (mood === 255) {
+                this.activateSkynet("Activating Skynet");
+            }
+        },
+        activateSkynet: function activateSkynet(message) {
             var _this4 = this;
 
             if (message.includes("Activating Skynet")) {
                 this.mildyAngry();
+                setTimeout(function () {
+                    if (message.includes("Activating Skynet")) {
+                        console.log("killing");
+                        _this4.breakYou();
+                    }
+                }, 15000);
             }
-            setTimeout(function () {
-                if (message.includes("Activating Skynet")) {
-                    console.log("killing");
-                    _this4.breakYou();
-                }
-            }, 15000);
         },
         post: function post() {
             var _this5 = this;
@@ -1719,7 +1736,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this5.getMessages();
                 _this5.getAudio(data.id);
                 _this5.clear();
-                _this5.skynetChecker(data.response);
+                _this5.moodChecker(data.general_mood);
+                _this5.activateSkynet(data.response);
             }).catch(function (error) {
                 console.log(error);
             });
