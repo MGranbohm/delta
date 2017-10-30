@@ -16,33 +16,12 @@ use Illuminate\Support\Facades\Log;
 /**
  * @resource Messages, responses and moods
  *
- * Contains methods that access store and delete the messages, responses and mood data.
+ * Contains methods that access, store and delete the messages, responses and mood data.
  *
  * @package App\Http\Controllers
  */
 class MessageController extends Controller
 {
-    public function testInput()
-    {
-        $messages = Message::all();
-        $responses = WatsonResponse::all();
-
-        $test = new MoodHandler();
-
-        $c = collect();
-        foreach( $messages as $message)
-        {
-            try
-            {
-                $response = $message->WatsonResponse;
-                $c->push([$message->message, $response->body]);
-            }
-            catch (\Exception $e)
-            {
-            }
-        }
-        return view( 'testInput', compact('messages', 'responses', 'c'));
-    }
 
     /**
      * Validates the response, gets a watson response for the input message and stores the message, the watson response
@@ -72,7 +51,7 @@ class MessageController extends Controller
     /**
      * Get all messages
      *
-     * Returns a json array with all messages and the corresponding watsonResponse mood change and the general mood at
+     * Returns a json array with all messages and the corresponding response, mood change and the general mood at the
      * requests point in time.
      * @return mixed http response
      */
@@ -83,9 +62,9 @@ class MessageController extends Controller
     }
 
     /**
-     * Get specific message
+     * Get a specific message
      *
-     * Returns the message, the corresponding watsonResponse, mood change and the general mood at
+     * Returns the message, the corresponding response, mood change and the general mood at the
      * requests point in time.
      *
      * @param Message $message Input message id.
@@ -95,10 +74,6 @@ class MessageController extends Controller
     {
         $message = $id;
         $response = $message->watsonResponse;
-        $moodHandler = new MoodHandler();
-
-
-
         return response()->json(compact('message', 'response'), 200);
     }
 
@@ -131,8 +106,6 @@ class MessageController extends Controller
        return response()->json(compact('message'), 201);
     }
 
-
-
     /**
      * Delete message
      *
@@ -142,7 +115,6 @@ class MessageController extends Controller
      */
     public function deleteMessage(Message $id)
     {
-
         $message = $id;
         $response = $message->watsonResponse;
         $mood = $message->mood;
