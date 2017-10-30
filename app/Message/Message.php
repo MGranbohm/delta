@@ -35,6 +35,7 @@ class Message extends Model
     	    'message' => $this->message,
             'response' => $this->watsonResponse()->count() ? $this->watsonResponse->body: "",
 		    'mood' => $this->mood()->count() ? $this->mood->mood: "",
+            'general_mood' => $this->mood()->count() ? $this->mood->general_mood: "",
 	    ];
     }
 
