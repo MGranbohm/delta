@@ -58,8 +58,10 @@ class MessageController extends Controller
         $message = Message::create([
             'message' => $userMessage
         ]);
+
         $message->mood()->create([
             'mood' => $moodHandler->getMood($result['intent']),
+            'general_mood' => $moodHandler->getGeneralMood($result['intent']),
         ]);
         $message->watsonResponse()->create([
             'body' => $result['response'],

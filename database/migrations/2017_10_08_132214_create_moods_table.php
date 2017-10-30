@@ -17,6 +17,7 @@ class CreateMoodsTable extends Migration
             $table->increments('id');
 	        $table->integer('message_id');
 	        $table->integer('mood');
+            $table->integer('general_mood');
             $table->timestamps();
             $table->softDeletes();
         });
