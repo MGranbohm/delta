@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Message\Message;
 use Illuminate\Http\Request;
 use App\SoundAPI\VoiceRSS;
 use App\Watson\WatsonResponse;
@@ -26,7 +27,8 @@ class SoundController extends Controller
 	public function watsonSound($id)
 	{
 		
-		$response = WatsonResponse::find($id);
+		$message = Message::find($id);
+		$response = $message->watsonResponse;
 		$tts = new VoiceRSS;
 		$voice = $tts->speech([
 			'key' => 'accee06bc1c84ae3919f4b87255c263c',

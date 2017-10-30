@@ -92,6 +92,10 @@ class MoodHandler
     public function getMood($intent)
     {
         $obj = json_decode($intent);
+        if(! $obj) {
+            return 0;
+        }
+
         $intent = $obj->{'intent'};
 
         return  $this->checkWatsonResponse($intent);
