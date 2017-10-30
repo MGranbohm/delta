@@ -64,6 +64,7 @@
             getMessages() {
                 axios.get(this.posturl +"/messages/all" + this.token)
                     .then(response => {
+//                        console.log(response);
                         this.messages = response.data;
                         this.scrollToBottom();
                     }).catch(error => {
@@ -90,7 +91,7 @@
             post() {
                 axios.post(this.posturl +"/message" + this.token, this.getData())
                     .then(response => {
-                        let data = response.data;
+                        let data = response.data.message;
                         this.getMessages();
                         this.getAudio(data.id);
                         this.clear();
