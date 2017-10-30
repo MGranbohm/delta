@@ -1700,25 +1700,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }, 0);
         },
         moodChecker: function moodChecker(mood) {
-            var color = mood + ", 0, 0, 1";
-            this.style = "background-color:rgba(" + color + ");";
+            var color = "";
+            if (mood > 100) {
+                color = mood + ", 0, 0, 1";
+            } else if (mood <= 100) {
+                var newMod = 255 - mood;
+                newMod = newMod - 50;
+                color = newMod + "," + newMod + "," + newMod + ", 1";
+            }
 
-            if (mood > 220) {
-                this.activateSkynet();
+            this.style = "background-color:rgba(" + color + ");";
+            console.log(mood);
+            if (mood === 255) {
+                this.activateSkynet("Activating Skynet");
             }
         },
-        activateSkynet: function activateSkynet() {
+        activateSkynet: function activateSkynet(message) {
             var _this4 = this;
 
             if (message.includes("Activating Skynet")) {
                 this.mildyAngry();
+                setTimeout(function () {
+                    if (message.includes("Activating Skynet")) {
+                        console.log("killing");
+                        _this4.breakYou();
+                    }
+                }, 15000);
             }
-            setTimeout(function () {
-                if (message.includes("Activating Skynet")) {
-                    console.log("killing");
-                    _this4.breakYou();
-                }
-            }, 15000);
         },
         post: function post() {
             var _this5 = this;
@@ -1727,8 +1735,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 var data = response.data.message;
                 _this5.getMessages();
                 _this5.getAudio(data.id);
-                _this5.moodChecker(data.general_mood);
                 _this5.clear();
+                _this5.moodChecker(data.general_mood);
+                _this5.activateSkynet(data.response);
             }).catch(function (error) {
                 console.log(error);
             });

@@ -78,25 +78,34 @@
                 setTimeout(() => { this.chatBox.scrollTop = this.chatBox.scrollHeight; }, 0);
             },
 
-            moodChecker(mood) {
-                let color = mood + ", 0, 0, 1";
-                this.style = "background-color:rgba(" + color + ");"
+            moodChecker(mood){
+                let color = "";
+                if(mood > 100) {
+                    color = mood + ", 0, 0, 1";
+                } else if(mood <= 100) {
+                    let newMod = 255 - mood;
+                    newMod = newMod - 50;
+                    color = newMod +","+ newMod + ","+ newMod +", 1";
+                }
 
-                if(mood > 220) {
-                    this.activateSkynet();
+                this.style = "background-color:rgba(" + color + ");"
+                console.log(mood);
+                if(mood === 255) {
+                    this.activateSkynet("Activating Skynet");
                 }
             },
 
-            activateSkynet() {
+            activateSkynet(message) {
                 if(message.includes("Activating Skynet")) {
                     this.mildyAngry();
+                    setTimeout(() => {
+                        if(message.includes("Activating Skynet")) {
+                            console.log("killing");
+                            this.breakYou();
+                        } }, 15000);
                 }
-                setTimeout(() => {
-                    if(message.includes("Activating Skynet")) {
-                        console.log("killing");
-                        this.breakYou();
-                    } }, 15000);
             },
+
 
             post() {
                 axios.post(this.posturl +"/message" + this.token, this.getData())
@@ -104,8 +113,9 @@
                         let data = response.data.message;
                         this.getMessages();
                         this.getAudio(data.id);
-                        this.moodChecker(data.general_mood);
                         this.clear();
+                        this.moodChecker(data.general_mood);
+                        this.activateSkynet(data.response);
                     }).catch(error => {
                     console.log(error);
                 });

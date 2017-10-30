@@ -27,22 +27,22 @@ class MoodHandler
      */
     public function checkWatsonResponse($watsonAnswer)
     {
-        $bad_words = array("intelligence_mean","insults","skynet");
+        $bad_words = array("intelligence_mean","insults");
         $nice_words = array("flirting","inteligence_nice");
-        
+
         foreach($bad_words as $bad_word) {
-            if (strpos($watsonAnswer, $bad_word) !== false) {
-                return + 100;
+            if ($watsonAnswer == $bad_word) {
+                return 100;
             }
         }
 
         foreach($nice_words as $nice_word ) {
-            if (strpos($watsonAnswer, $nice_word) !== false) {
-                return 10;
-            } else {
-                return 40;
+            if ($watsonAnswer == $nice_word) {
+                return -40;
             }
         }
+
+        return 0;
     }
 
     /**
@@ -73,15 +73,23 @@ class MoodHandler
 
         $intent = $obj->{'intent'};
 
-        return  $this->checkWatsonResponse($intent);
+        return $this->checkWatsonResponse($intent);
     }
 
     public function getGeneralMood($intent)
     {
         $rows = Mood::count();
+
+        $obj = json_decode($intent);
+
+        if(! $obj) {
+            return 0;
+        }
+
+        $intent = $obj->{'intent'};
         
         if( $rows == 0  ){
-            $generalMood = 50;    
+            $generalMood = 100;
         }else{
             $latestGeneralMood = Mood::latest()->first()->general_mood;
             $differenceMood = $this->checkWatsonResponse($intent);
