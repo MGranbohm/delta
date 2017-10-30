@@ -9,6 +9,7 @@
 namespace App\Watson;
 
 use App\Context;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class that handles message communication with
@@ -63,6 +64,9 @@ class WatsonAPI
     {
         $ch = curl_init();
 
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
         curl_setopt($ch, CURLOPT_URL, "https://gateway-fra.watsonplatform.net/conversation/api/v1/workspaces/968a5a54-7b22-43e8-8472-67654b22def9/message?version=2017-05-26");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, '{"input": {"text": "'.$message.'"}, "Context": {"conversation_id": "6db63f0d-c5ca-4d65-a309-69249f036d12", "system": {"dialog_stack":[{"dialog_node":"root"}], "dialog_turn_counter": 1, "dialog_request_counter": 1}}}');
@@ -75,7 +79,8 @@ class WatsonAPI
         $result = curl_exec($ch);
 
         if (curl_errno($ch)) {
-            echo 'Error:' . curl_error($ch);
+//            echo 'Error:' . curl_error($ch);
+            Log::info('Error:' . curl_error($ch));
         }
         return $result;
     }
@@ -138,6 +143,9 @@ class WatsonAPI
     {
 
         $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         if($message === ''){
             curl_setopt($ch, CURLOPT_URL, "https://gateway-fra.watsonplatform.net/conversation/api/v1/workspaces/968a5a54-7b22-43e8-8472-67654b22def9/message?version=2017-05-26");
