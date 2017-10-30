@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Message\Message;
 use App\Message\Mood;
+use App\Http\Requests\StorePostRequest;
 use App\Watson\WatsonAPI;
 use App\Watson\WatsonResponse;
 use Illuminate\Http\Request;
@@ -13,6 +14,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
 /**
+ * @resource Messages and responses
  * Class MessageController
  * stores input message, watson response.
  * @package App\Http\Controllers
@@ -46,11 +48,9 @@ class MessageController extends Controller
      * @param Request $request The http request containg the input message.
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        $request->validate([
-            'message'=>'required'
-        ]);
+
         $api = new WatsonAPI();
         $moodHandler = new MoodHandler();
         $userMessage = $request->message;
@@ -67,7 +67,10 @@ class MessageController extends Controller
         return $message;
     }
 
-    /** Returns a json array with all messages and the corresponding watsonResponse.
+    /**
+     * api/messages/all
+     *
+     * Returns a json array with all messages and the corresponding watsonResponse and mood change.
      * @return mixed http response
      */
     public function allMessages()
@@ -76,74 +79,66 @@ class MessageController extends Controller
         return response()->json($messages, 200);
     }
 
-    /**Returns the message, the watsonResponse, the moodchange factor and the general mood for the input message id.
+    /**
+     * api/messages/{id}
+     *
+     * Returns the message, the watsonResponse, the moodchange factor and the general mood for the input message id.
+     *
      * @param Message $message Input message id.
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function getMessage(Message $message)
+    public function getMessage(Message $id)
     {
+        $message = $id;
         $response = $message->watsonResponse;
         $moodHandler = new MoodHandler();
         $generalMood = $moodHandler->getGeneralMood();
 
-        return response()->json([$message, $response,$generalMood], 200);
+
+        return response()->json(compact('message', 'response', 'generalMood'), 200);
     }
 
-    /**Return just the watsonResponse for the input watsonResponse id.
+    /**
+     * api/responses/{id}
+     *
+     * Return just the watsonResponse for the input watsonResponse id.
      * @param Message $message
      * @return \Illuminate\Http\JsonResponse
      */
 
-    public function getResponse(WatsonResponse $response)
+    public function getResponse(WatsonResponse $id)
     {
-        return response()->json($response, 200);
+        $response = $id;
+        return response()->json(compact('response'), 200);
     }
     
-    /**Posts a message and returns the posted message, the watson response and the mood change factor;
+    /**
+     * api/message/
+     *
+     * Posts a message and returns the posted message, the watson response and the mood change factor;
      * @param Request $request
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     * @return $message
      */
-    public function postMessage(Request $request)
+    public function postMessage(StorePostRequest $id)
     {
-        $request->validate([
-            'message'=>'required'
-        ]);
-
-        $message = $this->store($request);
-
-        return response()->json($message, 201);
+       $request = $id;
+       $message = $this->store($request);
+       return response()->json(compact('message'), 201);
     }
 
-//    /**Under construction.
-//     * @param Request $request
-//     * @param Message $message
-//     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
-//     */
-//    public function update(Request $request,Message $message)
-//    {
-//        $request->validate([
-//            'message'=>'required'
-//        ]);
-//
-//        $response = $message->watsonResponse;
-//        $mood = $message->mood;
-//        $message->message=$request->message;
-//        $response->body=$this->getWatsonResponse($message->message);
-//        $responses = WatsonResponse::all();
-//        $test = new MoodHandler();
-//        $mood->mood=$test->checkWatsonResponse($response->body);
-//        $message->save();
-//        $response->save();
-//        $mood->save();
-//        return response($message, 200);
-//    }
 
-    /**Deletes a message and corresponding response and mood change from the chat.
+
+    /**
+     * api/messages/{id}
+     *
+     * Deletes a message and corresponding response and mood change from the chat.
      * @param Message $message Message id of message to delete:
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
-    public function deleteMessage(Message $message)
+    public function deleteMessage(Message $id)
     {
+
+        $message = $id;
         $response = $message->watsonResponse;
         $mood = $message->mood;
         $message->delete();
