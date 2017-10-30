@@ -27,7 +27,7 @@ class MessageController extends Controller
         $responses = WatsonResponse::all();
 
         $test = new MoodHandler();
-//        $mood = $test->getGeneralMood();
+
         $c = collect();
         foreach( $messages as $message)
         {
