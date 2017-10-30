@@ -14,9 +14,10 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
 /**
- * @resource Messages and responses
- * Class MessageController
- * stores input message, watson response.
+ * @resource Messages, responses and moods
+ *
+ * Contains methods that access store and delete the messages, responses and mood data.
+ *
  * @package App\Http\Controllers
  */
 class MessageController extends Controller
@@ -40,17 +41,17 @@ class MessageController extends Controller
             {
             }
         }
-        return view( 'testInput', compact('messages', 'responses', 'mood', 'c'));
+        return view( 'testInput', compact('messages', 'responses', 'c'));
     }
 
     /**
-     * Validates the response, gets a watson response for the input message and stores both the message and the watson response in the Database.
+     * Validates the response, gets a watson response for the input message and stores the message, the watson response
+     * and the mood changes in the Database.
      * @param Request $request The http request containg the input message.
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function store(StorePostRequest $request)
     {
-
         $api = new WatsonAPI();
         $moodHandler = new MoodHandler();
         $userMessage = $request->message;
@@ -58,7 +59,6 @@ class MessageController extends Controller
         $message = Message::create([
             'message' => $userMessage
         ]);
-
         $message->mood()->create([
             'mood' => $moodHandler->getMood($result['intent']),
             'general_mood' => $moodHandler->getGeneralMood($result['intent']),
@@ -70,9 +70,10 @@ class MessageController extends Controller
     }
 
     /**
-     * api/messages/all
+     * Get all messages
      *
-     * Returns a json array with all messages and the corresponding watsonResponse and mood change.
+     * Returns a json array with all messages and the corresponding watsonResponse mood change and the general mood at
+     * requests point in time.
      * @return mixed http response
      */
     public function allMessages()
@@ -82,9 +83,10 @@ class MessageController extends Controller
     }
 
     /**
-     * api/messages/{id}
+     * Get specific message
      *
-     * Returns the message, the watsonResponse, the moodchange factor and the general mood for the input message id.
+     * Returns the message, the corresponding watsonResponse, mood change and the general mood at
+     * requests point in time.
      *
      * @param Message $message Input message id.
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
@@ -101,9 +103,9 @@ class MessageController extends Controller
     }
 
     /**
-     * api/responses/{id}
+     * Get specific response only
      *
-     * Return just the watsonResponse for the input watsonResponse id.
+     * Returns just the response for the input response id.
      * @param Message $message
      * @return \Illuminate\Http\JsonResponse
      */
@@ -115,9 +117,10 @@ class MessageController extends Controller
     }
     
     /**
-     * api/message/
+     * Add new message
      *
-     * Posts a message and returns the posted message, the watson response and the mood change factor;
+     * Adds a new input message and returns the input message, the response, the mood change factor
+     * and the generalmood at the requests point in time.
      * @param Request $request
      * @return $message
      */
@@ -131,9 +134,9 @@ class MessageController extends Controller
 
 
     /**
-     * api/messages/{id}
+     * Delete message
      *
-     * Deletes a message and corresponding response and mood change from the chat.
+     * Deletes a message and corresponding response and the mood changes from the database.
      * @param Message $message Message id of message to delete:
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
@@ -147,15 +150,5 @@ class MessageController extends Controller
         $response->delete();
         $mood->delete();
         return response(null, 204);
-    }
-
-    /**Returns the general mood at requests point in time.
-     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
-     */
-    public function getGeneralMood()
-    {
-        $test = new MoodHandler();
-        $mood = $test->getGeneralMood();
-        return response()->json($mood, 200);
     }
 }

@@ -48,12 +48,12 @@
 <p>Welcome to the generated API reference.
 <a href="http://delta.app/docs/collection.json">Get Postman Collection</a></p>
 <!-- END_INFO -->
-<h1>Messages and responses</h1>
-<p>Class MessageController
-stores input message, watson response.</p>
+<h1>Messages, responses and moods</h1>
+<p>Contains methods that access store and delete the messages, responses and mood data.</p>
 <!-- START_d81278cd36a9922790e42cb9cdc8ff62 -->
-<h2>api/messages/all</h2>
-<p>Returns a json array with all messages and the corresponding watsonResponse and mood change.</p>
+<h2>Get all messages</h2>
+<p>Returns a json array with all messages and the corresponding watsonResponse mood change and the general mood at
+requests point in time.</p>
 <blockquote>
 <p>Example request:</p>
 </blockquote>
@@ -80,19 +80,22 @@ $.ajax(settings).done(function (response) {
         "id": 1,
         "message": "-x",
         "response": "Hello. My name is Phil, What is your name?",
-        "mood": 1
+        "mood": 1,
+        "general_mood": 50
     },
     {
         "id": 2,
-        "message": "-x",
-        "response": "Hello. My name is Phil, What is your name?",
-        "mood": 1
+        "message": "fuck you",
+        "response": "I think you should see over your life choices.",
+        "mood": -40,
+        "general_mood": 10
     },
     {
         "id": 3,
-        "message": "fuck",
-        "response": "I think you should see over your life choices.",
-        "mood": -3
+        "message": "fuck you",
+        "response": "Dude, get help.",
+        "mood": -40,
+        "general_mood": 0
     }
 ]</code></pre>
 <h3>HTTP Request</h3>
@@ -100,8 +103,9 @@ $.ajax(settings).done(function (response) {
 <p><code>HEAD api/messages/all</code></p>
 <!-- END_d81278cd36a9922790e42cb9cdc8ff62 -->
 <!-- START_cbf8fc5358a9792ab03acd386ea01cde -->
-<h2>api/messages/{id}</h2>
-<p>Returns the message, the watsonResponse, the moodchange factor and the general mood for the input message id.</p>
+<h2>Get specific message</h2>
+<p>Returns the message, the corresponding watsonResponse, mood change and the general mood at
+requests point in time.</p>
 <blockquote>
 <p>Example request:</p>
 </blockquote>
@@ -129,8 +133,8 @@ $.ajax(settings).done(function (response) {
 <p><code>HEAD api/messages/{id}</code></p>
 <!-- END_cbf8fc5358a9792ab03acd386ea01cde -->
 <!-- START_8336ecd8c4e4b8c8fd0d05210c3edc0c -->
-<h2>api/responses/{id}</h2>
-<p>Return just the watsonResponse for the input watsonResponse id.</p>
+<h2>Get specific response only</h2>
+<p>Returns just the response for the input response id.</p>
 <blockquote>
 <p>Example request:</p>
 </blockquote>
@@ -158,8 +162,9 @@ $.ajax(settings).done(function (response) {
 <p><code>HEAD api/responses/{id}</code></p>
 <!-- END_8336ecd8c4e4b8c8fd0d05210c3edc0c -->
 <!-- START_ea8ba0d01b1c35fe3a7ca16fe58260de -->
-<h2>api/message/</h2>
-<p>Posts a message and returns the posted message, the watson response and the mood change factor;</p>
+<h2>Add new message</h2>
+<p>Adds a new input message and returns the input message, the response, the mood change factor
+and the generalmood at the requests point in time.</p>
 <blockquote>
 <p>Example request:</p>
 </blockquote>
@@ -206,8 +211,8 @@ $.ajax(settings).done(function (response) {
 </table>
 <!-- END_ea8ba0d01b1c35fe3a7ca16fe58260de -->
 <!-- START_f9ebd7defccbeb31b9451c8ecaa08e2e -->
-<h2>api/messages/{id}</h2>
-<p>Deletes a message and corresponding response and mood change from the chat.</p>
+<h2>Delete message</h2>
+<p>Deletes a message and corresponding response and the mood changes from the database.</p>
 <blockquote>
 <p>Example request:</p>
 </blockquote>
