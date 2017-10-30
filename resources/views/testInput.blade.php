@@ -14,7 +14,7 @@
             <li>{{$post[0]}}</li>
             <li>{{$post[1]}}</li>
         @endforeach
-        {{$mood}}
+
 
     </form>
     @stop

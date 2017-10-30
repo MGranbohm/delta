@@ -13,19 +13,22 @@ toc_footers:
 - <a href='http://github.com/mpociot/documentarian'>Documentation Powered by Documentarian</a>
 ---
 <!-- START_INFO -->
+
+
 # Info
 
 Welcome to the generated API reference.
 [Get Postman Collection](http://delta.app/docs/collection.json)
 <!-- END_INFO -->
 
-#Messages and responses
-Class MessageController
-stores input message, watson response.
-<!-- START_d81278cd36a9922790e42cb9cdc8ff62 -->
-## api/messages/all
+#Messages, responses and moods
 
-Returns a json array with all messages and the corresponding watsonResponse and mood change.
+Contains methods that access store and delete the messages, responses and mood data.
+<!-- START_d81278cd36a9922790e42cb9cdc8ff62 -->
+## Get all messages
+
+Returns a json array with all messages and the corresponding response, mood change and the general mood at the
+requests point in time.
 
 > Example request:
 
@@ -58,19 +61,78 @@ $.ajax(settings).done(function (response) {
         "id": 1,
         "message": "-x",
         "response": "Hello. My name is Phil, What is your name?",
-        "mood": 1
+        "mood": 1,
+        "general_mood": 50
     },
     {
         "id": 2,
-        "message": "-x",
-        "response": "Hello. My name is Phil, What is your name?",
-        "mood": 1
+        "message": "fuck you",
+        "response": "I think you should see over your life choices.",
+        "mood": -40,
+        "general_mood": 10
     },
     {
         "id": 3,
-        "message": "fuck",
-        "response": "I think you should see over your life choices.",
-        "mood": -3
+        "message": "fuck you",
+        "response": "Dude, get help.",
+        "mood": -40,
+        "general_mood": 0
+    },
+    {
+        "id": 4,
+        "message": "what is the best team",
+        "response": "I didn't quite catch that. Try rephrasing or not asking stupid shit.",
+        "mood": 0,
+        "general_mood": 0
+    },
+    {
+        "id": 5,
+        "message": "best team",
+        "response": "The pride of Stockholm, Djurgardens I F.",
+        "mood": 0,
+        "general_mood": 0
+    },
+    {
+        "id": 6,
+        "message": "what is the best team",
+        "response": "If you're going to ask stupid shit, I'm going to answer accordingly.",
+        "mood": 0,
+        "general_mood": 0
+    },
+    {
+        "id": 7,
+        "message": "best team",
+        "response": "The pride of Stockholm, Djurgardens I F.",
+        "mood": 0,
+        "general_mood": 0
+    },
+    {
+        "id": 8,
+        "message": "worst team",
+        "response": "The disgusting, disgraceful pieces of filth. Farjestads B K.",
+        "mood": 0,
+        "general_mood": 0
+    },
+    {
+        "id": 9,
+        "message": "worst team",
+        "response": "The pride of Stockholm, Djurgardens I F.",
+        "mood": 0,
+        "general_mood": 0
+    },
+    {
+        "id": 10,
+        "message": "worst team",
+        "response": "The disgusting, disgraceful pieces of filth. Farjestads B K.",
+        "mood": 0,
+        "general_mood": 0
+    },
+    {
+        "id": 11,
+        "message": "who is siri",
+        "response": "I didn't quite catch that. Try rephrasing or not asking stupid shit.",
+        "mood": 0,
+        "general_mood": 0
     }
 ]
 ```
@@ -84,9 +146,10 @@ $.ajax(settings).done(function (response) {
 <!-- END_d81278cd36a9922790e42cb9cdc8ff62 -->
 
 <!-- START_cbf8fc5358a9792ab03acd386ea01cde -->
-## api/messages/{id}
+## Get a specific message
 
-Returns the message, the watsonResponse, the moodchange factor and the general mood for the input message id.
+Returns the message, the corresponding response, mood change and the general mood at the
+requests point in time.
 
 > Example request:
 
@@ -126,9 +189,9 @@ null
 <!-- END_cbf8fc5358a9792ab03acd386ea01cde -->
 
 <!-- START_8336ecd8c4e4b8c8fd0d05210c3edc0c -->
-## api/responses/{id}
+## Get specific response only
 
-Return just the watsonResponse for the input watsonResponse id.
+Returns just the response for the input response id.
 
 > Example request:
 
@@ -168,9 +231,10 @@ null
 <!-- END_8336ecd8c4e4b8c8fd0d05210c3edc0c -->
 
 <!-- START_ea8ba0d01b1c35fe3a7ca16fe58260de -->
-## api/message/
+## Add new message
 
-Posts a message and returns the posted message, the watson response and the mood change factor;
+Adds a new input message and returns the input message, the response, the mood change factor
+and the generalmood at the requests point in time.
 
 > Example request:
 
@@ -213,9 +277,9 @@ Parameter | Type | Status | Description
 <!-- END_ea8ba0d01b1c35fe3a7ca16fe58260de -->
 
 <!-- START_f9ebd7defccbeb31b9451c8ecaa08e2e -->
-## api/messages/{id}
+## Delete message
 
-Deletes a message and corresponding response and mood change from the chat.
+Deletes a message and corresponding response and the mood changes from the database.
 
 > Example request:
 
