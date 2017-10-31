@@ -27,8 +27,8 @@ class MoodHandler
      */
     public function checkWatsonResponse($watsonAnswer)
     {
-        $bad_words = array("intelligence_mean","insults");
-        $nice_words = array("flirting","inteligence_nice");
+        $bad_words = array("intelligence_mean","insults","not_tolerated","negativt");
+        $nice_words = array("flirting","inteligence_nice","greetings","howareyou","nice","apologies");
 
         foreach($bad_words as $bad_word) {
             if ($watsonAnswer == $bad_word) {
